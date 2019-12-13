@@ -1,0 +1,23 @@
+fileFormatVersion: 2
+guid: 4f3e3aaa3eaef8946aad0efb05431003
+timeCreated: 1531835914
+licenseType: Store
+TrueTypeFontImporter:
+  serializedVersion: 4
+  fontSize: 16
+  forceTextureCase: -2
+  characterSpacing: 0
+  characterPadding: 1
+  includeFontData: 1
+  fontName: Gentium Book Basic
+  fontNames:
+  - Gentium Book Basic
+  fallbackFontReferences:
+  - {fileID: 12800000, guid: 1fe82e14395ae6b4bb0f15aac85751ba, type: 3}
+  - {fileID: 12800000, guid: 00b4fc6ac734a694794172963bfb3223, type: 3}
+  customCharacters: 
+  fontRenderingMode: 0
+  ascentCalculationMode: 1
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

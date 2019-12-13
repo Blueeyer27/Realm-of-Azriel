@@ -1,0 +1,24 @@
+fileFormatVersion: 2
+guid: e47fa2da7f9c519449baeba46cd79e64
+timeCreated: 1531835914
+licenseType: Store
+TrueTypeFontImporter:
+  serializedVersion: 4
+  fontSize: 16
+  forceTextureCase: -2
+  characterSpacing: 0
+  characterPadding: 1
+  includeFontData: 1
+  fontName: Rooters
+  fontNames:
+  - Rooters
+  fallbackFontReferences:
+  - {fileID: 12800000, guid: 11283441ca388644f8cfe232433da01b, type: 3}
+  - {fileID: 12800000, guid: 36f0828834ae46f4bb5959e59d76d562, type: 3}
+  - {fileID: 12800000, guid: 64d8cd8bece6935448d5bf6e12e80a59, type: 3}
+  customCharacters: 
+  fontRenderingMode: 0
+  ascentCalculationMode: 1
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

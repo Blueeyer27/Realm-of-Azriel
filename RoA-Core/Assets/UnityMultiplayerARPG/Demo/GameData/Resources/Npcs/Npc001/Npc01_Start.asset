@@ -1,0 +1,97 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0bc493348cdb9474d89497ed882aae38, type: 3}
+  m_Name: Npc01_Start
+  m_EditorClassIdentifier: 
+  title: Npc 01
+  titles: []
+  description: 'Hello, I''m Npc 01.
+
+    Try to choose menu below :)'
+  descriptions: []
+  icon: {fileID: 0}
+  type: 0
+  menus:
+  - title: Menu 01
+    showConditions: []
+    isCloseMenu: 0
+    dialog: {fileID: 11400000, guid: a789f187bcc9903418934a6631022451, type: 2}
+  - title: Menu 02
+    showConditions: []
+    isCloseMenu: 0
+    dialog: {fileID: 11400000, guid: f691fd013be809e4e83e80258bec78f8, type: 2}
+  - title: Quests
+    showConditions: []
+    isCloseMenu: 0
+    dialog: {fileID: 11400000, guid: 2e1622574915294469f568134ebe2c42, type: 2}
+  - title: Shop
+    showConditions: []
+    isCloseMenu: 0
+    dialog: {fileID: 11400000, guid: a6a3052e6c4f9a24e81299df42cc2ab6, type: 2}
+  - title: Craft Two Hand Sword
+    showConditions: []
+    isCloseMenu: 0
+    dialog: {fileID: 11400000, guid: 67ffed796ac984b4588fff9b6ae747da, type: 2}
+  - title: Save Respawn Point To Map001
+    showConditions: []
+    isCloseMenu: 0
+    dialog: {fileID: 11400000, guid: 31e5011dd78915841b5c2a2b5f62b9f6, type: 2}
+  - title: Save Respawn Point To Map002
+    showConditions: []
+    isCloseMenu: 0
+    dialog: {fileID: 11400000, guid: 1a645b1fdba8429438841d609298cc9b, type: 2}
+  - title: Refine Item
+    showConditions: []
+    isCloseMenu: 0
+    dialog: {fileID: 11400000, guid: bf8de3f12a1db3b4ea6b052274f92e0e, type: 2}
+  - title: Warp to Map002
+    showConditions: []
+    isCloseMenu: 0
+    dialog: {fileID: 11400000, guid: 1e6ddfa9f57a22b45a6081c073b30d0f, type: 2}
+  - title: Warp to Map002 (Instance)
+    showConditions: []
+    isCloseMenu: 0
+    dialog: {fileID: 11400000, guid: 672a769f742ce6d4a93875aa56c446b7, type: 2}
+  - title: Player Storage
+    showConditions: []
+    isCloseMenu: 0
+    dialog: {fileID: 11400000, guid: 0bb36d661f68e804192a446937bb2e63, type: 2}
+  - title: Guild Storage
+    showConditions: []
+    isCloseMenu: 0
+    dialog: {fileID: 11400000, guid: 3479b468c75ae6643b288bf1a2a698a3, type: 2}
+  - title: Close
+    showConditions: []
+    isCloseMenu: 1
+    dialog: {fileID: 0}
+  quest: {fileID: 0}
+  questAcceptedDialog: {fileID: 0}
+  questDeclinedDialog: {fileID: 0}
+  questAbandonedDialog: {fileID: 0}
+  questCompletedDialog: {fileID: 0}
+  questCompletedDailog: {fileID: 0}
+  sellItems: []
+  itemCraft:
+    craftingItem: {fileID: 0}
+    craftRequirements: []
+    requireGold: 0
+  craftDoneDialog: {fileID: 0}
+  craftNotMeetRequirementsDialog: {fileID: 0}
+  craftCancelDialog: {fileID: 0}
+  saveRespawnMap: {fileID: 0}
+  saveRespawnPosition: {x: 0, y: 0, z: 0}
+  saveRespawnConfirmDialog: {fileID: 0}
+  saveRespawnCancelDialog: {fileID: 0}
+  warpPortalType: 0
+  warpMap: {fileID: 0}
+  warpPosition: {x: 0, y: 0, z: 0}
+  warpCancelDialog: {fileID: 0}
+  storageCancelDialog: {fileID: 0}

@@ -1,0 +1,28 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 47c51736a8b6d164185fcf5883023b54, type: 3}
+  m_Name: CashShopItem002
+  m_EditorClassIdentifier: 
+  title: Cash Shop Item 002
+  description: Receive 1000 Gold and weapons
+  icon: {fileID: 21300000, guid: b10a2ac879ca3164e8bd67851a5acd9f, type: 3}
+  externalIconUrl: 
+  sellPrice: 75
+  receiveGold: 1000
+  receiveItems:
+  - item: {fileID: 11400000, guid: 99ce6353c3a0b344bb452d0b2035feed, type: 2}
+    amount: 1
+  - item: {fileID: 11400000, guid: 93c389fe9d40638469bffd9de26d31ba, type: 2}
+    amount: 1
+  - item: {fileID: 11400000, guid: b64f816f68b7d6a42b7d3857a4b5d931, type: 2}
+    amount: 1
+  - item: {fileID: 11400000, guid: 4519d6286cf69b142ac9894ff8e06a31, type: 2}
+    amount: 1

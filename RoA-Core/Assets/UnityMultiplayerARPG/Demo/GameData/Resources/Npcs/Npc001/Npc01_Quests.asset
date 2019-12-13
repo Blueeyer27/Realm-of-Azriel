@@ -1,0 +1,45 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0bc493348cdb9474d89497ed882aae38, type: 3}
+  m_Name: Npc01_Quests
+  m_EditorClassIdentifier: 
+  title: Npc 01
+  description: This is quest list
+  icon: {fileID: 0}
+  type: 0
+  menus:
+  - title: Kill Orcs Archer
+    showConditions: []
+    isCloseMenu: 0
+    dialog: {fileID: 11400000, guid: 5d1bca971e95f7849a8e74bcb551391e, type: 2}
+  - title: Kill Orcs Warrior
+    showConditions:
+    - conditionType: 5
+      quest: {fileID: 11400000, guid: b07c2f59514e7aa45a8005d227e79954, type: 2}
+      conditionalLevel: 0
+    - conditionType: 0
+      quest: {fileID: 0}
+      conditionalLevel: 5
+    isCloseMenu: 0
+    dialog: {fileID: 11400000, guid: ea8478f076a3c7645a77e9efd3c4b368, type: 2}
+  - title: Collects Swords
+    showConditions: []
+    isCloseMenu: 0
+    dialog: {fileID: 11400000, guid: df8c86b0cb4b8e746ab065cf3cef86ff, type: 2}
+  - title: Close
+    showConditions: []
+    isCloseMenu: 1
+    dialog: {fileID: 0}
+  quest: {fileID: 0}
+  questAcceptedDialog: {fileID: 0}
+  questDeclinedDialog: {fileID: 0}
+  questAbandonedDialog: {fileID: 0}
+  questCompletedDailog: {fileID: 0}
