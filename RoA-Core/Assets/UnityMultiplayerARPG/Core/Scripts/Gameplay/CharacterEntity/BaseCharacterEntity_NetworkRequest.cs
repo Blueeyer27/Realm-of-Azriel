@@ -141,6 +141,35 @@ namespace MultiplayerARPG
             return true;
         }
 
+        /// <summary>
+        /// Calls NetFuncPickupLootBagItem to pick up the item and move it from the monster loot bag to
+        /// the player's inventory.
+        /// </summary>
+        /// <param name="objectId">ID of the source object to loot from</param>
+        /// <param name="sourceItemIndex">index of the item in the loot bag</param>
+        /// <param name="nonEquipIndex">index of the inventory slot to move the item to</param>
+        /// <returns>true if successful</returns>
+        public bool RequestPickupLootBagItem(uint objectId, short sourceItemIndex, short nonEquipIndex)
+        {
+            if (IsDead())
+                return false;
+            CallNetFunction(NetFuncPickupLootBagItem, FunctionReceivers.Server, objectId, sourceItemIndex, nonEquipIndex);
+            return true;
+        }
+
+        /// <summary>
+        /// Picks up all loot bag items from the target monster and moves them to the player's inventory.
+        /// </summary>
+        /// <param name="objectId">ID of the source object to loot from</param>
+        /// <returns></returns>
+        public bool RequestPickupAllLootBagItems(uint objectId)
+        {
+            if (IsDead())
+                return false;
+            CallNetFunction(NetFuncPickupAllLootBagItems, FunctionReceivers.Server, objectId);
+            return true;
+        }
+
         public bool RequestEquipItem(short nonEquipIndex)
         {
             if (!CanDoActions() ||

@@ -53,6 +53,9 @@ namespace MultiplayerARPG
                     case UICharacterItemDragHandler.SourceLocation.StorageItems:
                         OnDropStorageItem(draggedItemUI);
                         break;
+                    case UICharacterItemDragHandler.SourceLocation.LootItems:
+                        OnLootItem(draggedItemUI);
+                        break;
                 }
             }
         }
@@ -96,6 +99,18 @@ namespace MultiplayerARPG
                     // Drop storage item to storage item
                     BasePlayerCharacterController.OwningCharacter.RequestSwapOrMergeStorageItem((short)draggedItemUI.uiCharacterItem.IndexOfData, (short)uiCharacterItem.IndexOfData);
                     break;
+            }
+        }
+
+        private void OnLootItem(UICharacterItemDragHandler draggedItemUI)
+        {
+            // Set UI drop state
+            draggedItemUI.isDropped = true;
+
+            if (uiCharacterItem.InventoryType == InventoryType.NonEquipItems)
+            {
+                BasePlayerCharacterEntity owningCharacter = BasePlayerCharacterController.OwningCharacter;
+                owningCharacter.RequestPickupLootBagItem(draggedItemUI.sourceObjectId, (short)draggedItemUI.uiCharacterItem.IndexOfData, (short)uiCharacterItem.IndexOfData);
             }
         }
 

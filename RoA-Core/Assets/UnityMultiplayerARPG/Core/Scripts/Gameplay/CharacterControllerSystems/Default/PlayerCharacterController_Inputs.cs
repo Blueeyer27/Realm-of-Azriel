@@ -88,7 +88,11 @@ namespace MultiplayerARPG
                         if (!EnemyEntityDetector.characters[findingEnemyIndex].GetCaches().IsHide &&
                             !EnemyEntityDetector.characters[findingEnemyIndex].IsDead())
                         {
-                            SetTarget(EnemyEntityDetector.characters[findingEnemyIndex], TargetActionType.Attack);
+                            if (!EnemyEntityDetector.characters[findingEnemyIndex].IsDead())
+                                SetTarget(EnemyEntityDetector.characters[findingEnemyIndex], TargetActionType.Attack);
+                            else
+                                SetTarget(EnemyEntityDetector.characters[findingEnemyIndex], TargetActionType.Loot);
+
                             if (SelectedEntity != null)
                                 targetLookDirection = (SelectedEntity.CacheTransform.position - MovementTransform.position).normalized;
                         }
@@ -525,7 +529,7 @@ namespace MultiplayerARPG
 
             if (TryGetAttackingCharacter(out targetCharacter))
             {
-                if (targetCharacter.GetCaches().IsHide || targetCharacter.IsDead())
+                if (targetCharacter.GetCaches().IsHide)
                 {
                     ClearQueueUsingSkill();
                     PlayerCharacterEntity.StopMove();
@@ -621,6 +625,13 @@ namespace MultiplayerARPG
                 {
                     // Stop movement to do something
                     PlayerCharacterEntity.StopMove();
+
+                    if (targetCharacter.IsDead())
+                    {
+                        BaseMonsterCharacterEntity monsterCharacterEntity = targetCharacter as BaseMonsterCharacterEntity;
+                        if (monsterCharacterEntity != null && monsterCharacterEntity.useLootBag && monsterCharacterEntity.LootBag.Count > 0)
+                            CacheUISceneGameplay.OnShowLootBag();
+                    }
                 }
                 else
                     UpdateTargetEntityPosition(targetCharacter);

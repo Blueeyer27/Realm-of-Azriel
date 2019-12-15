@@ -22,12 +22,43 @@ namespace MultiplayerARPG
         private float destroyRespawnDelay = 5f;
         [HideInInspector, System.NonSerialized]
         public bool isWandering;
+        [SerializeField]
+        public bool useLootBag = true;
+        public Transform lootSparkleEffect;
 
         [Header("Monster Character - Sync Fields")]
         [SerializeField]
         protected SyncFieldPackedUInt summonerObjectId = new SyncFieldPackedUInt();
         [SerializeField]
         protected SyncFieldByte summonType = new SyncFieldByte();
+        protected SyncListCharacterItem lootBag = new SyncListCharacterItem();
+        public IList<CharacterItem> LootBag
+        {
+            get { return lootBag; }
+            private set
+            {
+                lootBag.Clear();
+                foreach (CharacterItem entry in value)
+                {
+                    lootBag.Add(entry);
+                }
+
+                EnableSparkleEffect = lootBag.Count > 0;
+            }
+        }
+
+        protected SyncFieldBool enableSparkleEffect = new SyncFieldBool();
+        public bool EnableSparkleEffect
+        {
+            get
+            {
+                return enableSparkleEffect;
+            }
+            set
+            {
+                enableSparkleEffect.Set(value);
+            }
+        }
 
         public override string Title
         {
@@ -78,6 +109,8 @@ namespace MultiplayerARPG
         {
             base.EntityAwake();
             gameObject.tag = gameInstance.monsterTag;
+
+            EnableSparkleEffect = false;
         }
 
         protected override void EntityStart()
@@ -104,6 +137,15 @@ namespace MultiplayerARPG
                     // Summoner disappear so destroy it
                     UnSummon();
                 }
+            }
+
+            // Toggle the loot sparkle effect
+            if (lootSparkleEffect != null)
+            {
+                if (useLootBag && EnableSparkleEffect != lootSparkleEffect.gameObject.activeSelf)
+                    lootSparkleEffect.gameObject.SetActive(EnableSparkleEffect);
+                else if (!useLootBag && lootSparkleEffect.gameObject.activeSelf)
+                    lootSparkleEffect.gameObject.SetActive(false);
             }
         }
 
@@ -462,8 +504,19 @@ namespace MultiplayerARPG
                 }   // End for-loop
             }   // End count recived damage record count
             receivedDamageRecords.Clear();
-            // Drop items
-            MonsterDatabase.RandomItems(OnRandomDropItem);
+
+            // Populate itemDrops list with items that can be looted
+            List<ItemDrop> itemDrops = MonsterDatabase.GetRandomItems();
+            List<CharacterItem> lootBagItems = new List<CharacterItem>();
+            foreach (ItemDrop itemDrop in itemDrops)
+            {
+                if (useLootBag)
+                    lootBagItems.Add(CharacterItem.Create(itemDrop.item, 1, itemDrop.amount));
+                if (!useLootBag)
+                    OnRandomDropItem(itemDrop.item, itemDrop.amount);
+            }
+            LootBag = lootBagItems;
+
             // Clear looters because they are already set to dropped items
             looters.Clear();
 
@@ -539,6 +592,37 @@ namespace MultiplayerARPG
         {
             if ((Summoner != null && Summoner == ally) || MonsterDatabase.characteristic == MonsterCharacteristic.Assist)
                 SetAttackTarget(attacker);
+        }
+
+        /// <summary>
+        /// Removes the specified item from the loot bag. If amountToRemove is specified, only
+        /// that amount is removed from the stack.
+        /// </summary>
+        /// <param name="index">index of item to remove</param>
+        /// <param name="amountToRemove">amount of the item stack to remove</param>
+        public void RemoveLootItemAt(int index, short amountToRemove = 0)
+        {
+            if (lootBag.Count < index + 1)
+                return;
+
+            lootBag.RemoveAt(index);
+
+            EnableSparkleEffect = lootBag.Count > 0;
+        }
+
+        /// <summary>
+        /// Removes the specified character items from the loot bag.
+        /// </summary>
+        /// <param name="characterItems">character items to remove from loot bag</param>
+        public void RemoveLootItems(List<CharacterItem> characterItems)
+        {
+            if (lootBag.Count == 0)
+                return;
+
+            foreach (CharacterItem characterItem in characterItems)
+                lootBag.Remove(characterItem);
+
+            EnableSparkleEffect = lootBag.Count > 0;
         }
     }
 

@@ -104,6 +104,135 @@ namespace MultiplayerARPG
         }
 
         /// <summary>
+        /// Moves an item from the specified monster's loot bag to the player's inventory.
+        /// </summary>
+        /// <param name="objectId">ID of the source object to loot from</param>
+        /// <param name="lootBagIndex">index of the item to look in the loot bag</param>
+        /// <param name="nonEquipIndex">index of the inventory slot to place the item</param>
+        protected void NetFuncPickupLootBagItem(uint objectId, short lootBagIndex, short nonEquipIndex)
+        {
+            BaseMonsterCharacterEntity monsterCharacterEntity = GetTargetEntity() as BaseMonsterCharacterEntity;
+            if (monsterCharacterEntity == null || monsterCharacterEntity.ObjectId != objectId)
+            {
+                var monsterCharacters = FindObjectsOfType(typeof(BaseMonsterCharacterEntity));
+                foreach (BaseMonsterCharacterEntity monsterCharacter in monsterCharacters)
+                {
+                    if (monsterCharacter.ObjectId == objectId)
+                    {
+                        monsterCharacterEntity = monsterCharacter;
+                        break;
+                    }
+                }
+            }
+
+            if (monsterCharacterEntity == null || monsterCharacterEntity.LootBag.Count == 0)
+                return;
+
+            if (lootBagIndex > monsterCharacterEntity.LootBag.Count - 1)
+                return;
+
+            CharacterItem lootItem = monsterCharacterEntity.LootBag[lootBagIndex].Clone();
+
+            int destIndex = -1;
+            if (nonEquipIndex < 0 || nonEquipIndex > NonEquipItems.Count - 1 || !NonEquipItems[nonEquipIndex].IsEmptySlot())
+            {
+                if (nonEquipIndex > 0 && nonEquipIndex < NonEquipItems.Count &&
+                    NonEquipItems[nonEquipIndex].dataId == lootItem.dataId &&
+                    NonEquipItems[nonEquipIndex].amount + lootItem.amount <= lootItem.GetMaxStack())
+                {
+                    destIndex = nonEquipIndex;
+                    lootItem.amount += NonEquipItems[nonEquipIndex].amount;
+                }
+                else
+                {
+                    int firstEmptySlot = -1;
+                    for (int i = 0; i < NonEquipItems.Count; i++)
+                    {
+                        if (firstEmptySlot < 0 && NonEquipItems[i].IsEmptySlot())
+                            firstEmptySlot = i;
+
+                        if (NonEquipItems[i].dataId == lootItem.dataId && NonEquipItems[i].amount + lootItem.amount <= lootItem.GetMaxStack())
+                        {
+                            destIndex = i;
+                            lootItem.amount += NonEquipItems[i].amount;
+                            break;
+                        }
+                    }
+
+                    if (destIndex < 0)
+                        destIndex = firstEmptySlot;
+                }
+            }
+            else
+                destIndex = nonEquipIndex;
+
+            if (destIndex >= 0)
+            {
+                monsterCharacterEntity.RemoveLootItemAt(lootBagIndex);
+                nonEquipItems[destIndex] = lootItem;
+            }
+        }
+
+        /// <summary>
+        /// Removes all items from the target monster's loot bag and places them in the character's inventory.
+        /// <param name="objectId">ID of the source object to loot from</param>
+        /// </summary>
+        protected virtual void NetFuncPickupAllLootBagItems(uint objectId)
+        {
+            BaseMonsterCharacterEntity monsterCharacterEntity = GetTargetEntity() as BaseMonsterCharacterEntity;
+            if (monsterCharacterEntity == null || monsterCharacterEntity.ObjectId != objectId)
+            {
+                var monsterCharacters = FindObjectsOfType(typeof(BaseMonsterCharacterEntity));
+                foreach (BaseMonsterCharacterEntity monsterCharacter in monsterCharacters)
+                {
+                    if (monsterCharacter.ObjectId == objectId)
+                    {
+                        monsterCharacterEntity = monsterCharacter;
+                        break;
+                    }
+                }
+            }
+
+            if (monsterCharacterEntity == null || monsterCharacterEntity.LootBag.Count == 0)
+                return;
+
+            List<CharacterItem> itemsToRemove = new List<CharacterItem>();
+
+            foreach (CharacterItem lootItem in monsterCharacterEntity.LootBag)
+            {
+                CharacterItem lootItemClone = lootItem.Clone();
+
+                int destIndex = -1;
+                int firstEmptySlot = -1;
+                for (int i = 0; i < NonEquipItems.Count; i++)
+                {
+                    if (firstEmptySlot < 0 && NonEquipItems[i].IsEmptySlot())
+                        firstEmptySlot = i;
+
+                    if (NonEquipItems[i].dataId == lootItem.dataId && NonEquipItems[i].amount + lootItem.amount <= lootItem.GetMaxStack())
+                    {
+                        destIndex = (short)i;
+                        lootItemClone.amount += NonEquipItems[i].amount;
+                        break;
+                    }
+                }
+
+                if (destIndex < 0)
+                    destIndex = firstEmptySlot;
+
+                if (destIndex >= 0)
+                {
+                    nonEquipItems[destIndex] = lootItemClone;
+                    itemsToRemove.Add(lootItem);
+                }
+                else
+                    break;
+            }
+
+            monsterCharacterEntity.RemoveLootItems(itemsToRemove);
+        }
+
+        /// <summary>
         /// This will be called at server to order character to equip weapon or shield
         /// </summary>
         /// <param name="nonEquipIndex"></param>

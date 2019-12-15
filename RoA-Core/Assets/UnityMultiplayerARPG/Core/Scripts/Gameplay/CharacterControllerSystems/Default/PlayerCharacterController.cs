@@ -17,7 +17,8 @@ namespace MultiplayerARPG
         {
             Undefined,
             Attack,
-            UseSkill
+            UseSkill,
+            Loot
         }
 
         protected delegate bool UsePendingSkillAction(bool isLeftHand);
@@ -218,7 +219,7 @@ namespace MultiplayerARPG
                 character = TargetEntity as BaseCharacterEntity;
                 if (character != null &&
                     character != PlayerCharacterEntity &&
-                    character.CanReceiveDamageFrom(PlayerCharacterEntity))
+                    character.CanReceiveDamageFrom(PlayerCharacterEntity) && !character.IsDead())
                     return true;
                 else
                     character = null;

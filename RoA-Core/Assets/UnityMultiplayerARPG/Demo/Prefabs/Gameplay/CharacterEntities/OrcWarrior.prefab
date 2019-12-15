@@ -1260,6 +1260,7 @@ Transform:
   - {fileID: 4307462936338836}
   - {fileID: 4084834180942154}
   - {fileID: 4271494550573848}
+  - {fileID: 205073621470176666}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -1783,8 +1784,10 @@ MonoBehaviour:
     elementId: 0
     forOwnerOnly: 1
   monsterCharacter: {fileID: 11400000, guid: 04cf3a67b05487e4a84f0da538307cb3, type: 2}
-  destroyDelay: 2
+  destroyDelay: 60
   destroyRespawnDelay: 5
+  useLootBag: 1
+  lootSparkleEffect: {fileID: 205073621470176666}
   summonerObjectId:
     behaviour: {fileID: 0}
     elementId: 0
@@ -3430,3 +3433,83 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+--- !u!1001 &7099883186076007696
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 4234570078615334}
+    m_Modifications:
+    - target: {fileID: 4851416101422745362, guid: 4bdcc4b18b00bcc4bb099969dc882008,
+        type: 3}
+      propertyPath: m_Name
+      value: LootSparkle
+      objectReference: {fileID: 0}
+    - target: {fileID: 6944352143631210634, guid: 4bdcc4b18b00bcc4bb099969dc882008,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6944352143631210634, guid: 4bdcc4b18b00bcc4bb099969dc882008,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6944352143631210634, guid: 4bdcc4b18b00bcc4bb099969dc882008,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6944352143631210634, guid: 4bdcc4b18b00bcc4bb099969dc882008,
+        type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0.7071068
+      objectReference: {fileID: 0}
+    - target: {fileID: 6944352143631210634, guid: 4bdcc4b18b00bcc4bb099969dc882008,
+        type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6944352143631210634, guid: 4bdcc4b18b00bcc4bb099969dc882008,
+        type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6944352143631210634, guid: 4bdcc4b18b00bcc4bb099969dc882008,
+        type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0.7071068
+      objectReference: {fileID: 0}
+    - target: {fileID: 6944352143631210634, guid: 4bdcc4b18b00bcc4bb099969dc882008,
+        type: 3}
+      propertyPath: m_RootOrder
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 6944352143631210634, guid: 4bdcc4b18b00bcc4bb099969dc882008,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: -90
+      objectReference: {fileID: 0}
+    - target: {fileID: 6944352143631210634, guid: 4bdcc4b18b00bcc4bb099969dc882008,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6944352143631210634, guid: 4bdcc4b18b00bcc4bb099969dc882008,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 9008355679860037926, guid: 4bdcc4b18b00bcc4bb099969dc882008,
+        type: 3}
+      propertyPath: InitialModule.startLifetime.scalar
+      value: 0.5
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 4bdcc4b18b00bcc4bb099969dc882008, type: 3}
+--- !u!4 &205073621470176666 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 6944352143631210634, guid: 4bdcc4b18b00bcc4bb099969dc882008,
+    type: 3}
+  m_PrefabInstance: {fileID: 7099883186076007696}
+  m_PrefabAsset: {fileID: 0}

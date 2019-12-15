@@ -599,8 +599,16 @@ namespace MultiplayerARPG
                 }
                 else if (tempPressPickupItem)
                 {
-                    // Find for item to pick up
-                    if (SelectedEntity != null && SelectedEntity is ItemDropEntity)
+                    if (SelectedEntity != null && SelectedEntity is MonsterCharacterEntity)
+                    {
+                        BaseMonsterCharacterEntity m = SelectedEntity as BaseMonsterCharacterEntity;
+                        if (m != null && m.IsDead() && m.useLootBag)
+                        {
+                            CacheUISceneGameplay.OnShowLootBag();
+                        }
+                    }
+                    // Find item to pick up
+                    else if (SelectedEntity != null && SelectedEntity is ItemDropEntity)
                         PlayerCharacterEntity.RequestPickupItem((SelectedEntity as ItemDropEntity).ObjectId);
                 }
                 else if (tempPressReload)

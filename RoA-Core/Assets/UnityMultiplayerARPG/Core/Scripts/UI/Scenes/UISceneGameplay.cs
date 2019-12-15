@@ -76,6 +76,7 @@ namespace MultiplayerARPG
         public UIStorageItems uiPlayerStorageItems;
         public UIStorageItems uiGuildStorageItems;
         public UIStorageItems uiBuildingStorageItems;
+        public UILootItems uiLootItems;
         public UICraftItems uiBuildingCraftItems;
         public UIBase uiIsWarping;
 
@@ -607,6 +608,18 @@ namespace MultiplayerARPG
                         uiBuildingStorageItems.UpdateData();
                     }
                     break;
+            }
+        }
+
+        public void OnShowLootBag()
+        {
+            if (uiLootItems != null)
+            {
+                if (!uiLootItems.IsVisible())
+                {
+                    uiLootItems.Show();
+                    uiLootItems.UpdateData();
+                }
             }
         }
 

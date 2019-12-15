@@ -10,9 +10,13 @@ namespace MultiplayerARPG
             EquipItems,
             StorageItems,
             Hotkey,
+            LootItems,
         }
 
         public SourceLocation sourceLocation { get; private set; }
+
+        public uint sourceObjectId { get; private set; }
+
         // Non Equip / Equip items data
         public UICharacterItem uiCharacterItem { get; private set; }
         // Hotkey data
@@ -41,6 +45,8 @@ namespace MultiplayerARPG
                         return uiCharacterItem != null && uiCharacterItem.IndexOfData >= 0 && uiCharacterItem.CharacterItem.NotEmptySlot();
                     case SourceLocation.Hotkey:
                         return uiCharacterHotkey != null;
+                    case SourceLocation.LootItems:
+                        return true;
                 }
                 return false;
             }
@@ -76,6 +82,13 @@ namespace MultiplayerARPG
             this.uiCharacterHotkey = uiCharacterHotkey;
         }
 
+        public void SetupForLootItems(UICharacterItem uiCharacterItem, uint sourceObjectId)
+        {
+            sourceLocation = SourceLocation.LootItems;
+            this.sourceObjectId = sourceObjectId;
+            this.uiCharacterItem = uiCharacterItem;
+        }
+
         public override void OnEndDrag(PointerEventData eventData)
         {
             base.OnEndDrag(eventData);
@@ -89,6 +102,8 @@ namespace MultiplayerARPG
                 uiCharacterItem.OnClickMoveFromStorage();
             if (sourceLocation == SourceLocation.Hotkey)
                 BasePlayerCharacterController.OwningCharacter.RequestAssignHotkey(uiCharacterHotkey.hotkeyId, HotkeyType.None, string.Empty);
+            if (sourceLocation == SourceLocation.LootItems)
+                uiCharacterItem.OnClickLootItem();
         }
     }
 }

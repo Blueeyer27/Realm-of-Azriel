@@ -71,6 +71,8 @@ namespace MultiplayerARPG
             RegisterNetFunction(NetFuncSkillCastingInterrupted);
             RegisterNetFunction<PackedUInt>(NetFuncPickupItem);
             RegisterNetFunction<short, short>(NetFuncDropItem);
+            RegisterNetFunction<uint, short, short>(NetFuncPickupLootBagItem);
+            RegisterNetFunction<uint>(NetFuncPickupAllLootBagItems);
             RegisterNetFunction<short, byte>(NetFuncEquipArmor);
             RegisterNetFunction<short, byte, bool>(NetFuncEquipWeapon);
             RegisterNetFunction<short>(NetFuncUnEquipArmor);
