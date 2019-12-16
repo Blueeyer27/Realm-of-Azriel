@@ -3254,6 +3254,8 @@ MonoBehaviour:
     behaviour: {fileID: 0}
     elementId: 0
     forOwnerOnly: 1
+  gender: {fileID: 0}
+  race: {fileID: 0}
   monsterCharacter: {fileID: 11400000, guid: 23e69da72a14d644eb8c0128af2ee872, type: 2}
   destroyDelay: 2
   destroyRespawnDelay: 5

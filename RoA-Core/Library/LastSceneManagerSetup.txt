@@ -1,5 +1,5 @@
 sceneSetups:
-- path: Assets/Environment/Maps/Valwyn001.unity
+- path: Assets/UnityMultiplayerARPG_CharacterRace-master/Scenes/00Init_Race.unity
   isLoaded: 1
   isActive: 1
   isSubScene: 0
