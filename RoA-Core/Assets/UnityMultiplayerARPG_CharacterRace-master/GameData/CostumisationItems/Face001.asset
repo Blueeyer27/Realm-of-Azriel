@@ -1,0 +1,322 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 75d6d0cd4d7cf8c4786ee2be97f454fb, type: 3}
+  m_Name: Face001
+  m_EditorClassIdentifier: 
+  title: Armor001
+  titles: []
+  description: 
+  descriptions: []
+  category: 
+  icon: {fileID: 21300000, guid: fa88bd6a9e09afa44964a6da1e616aed, type: 3}
+  itemType: 1
+  dropModel: {fileID: 1788792654363946, guid: 8da4f5a11c78d934382a50e10216b394, type: 3}
+  sellPrice: 100
+  weight: 1
+  maxStack: 1
+  itemRefine: {fileID: 0}
+  lockDuration: 0
+  requirement:
+    character: {fileID: 0}
+    level: 0
+    attributeAmounts: []
+  equipmentSet: {fileID: 11400000, guid: 20999d469e915904f936510d5cecf079, type: 2}
+  maxDurability: 0
+  destroyIfBroken: 0
+  maxSocket: 0
+  armorType: {fileID: 11400000, guid: 6ebf6732ca5b1b045af8e89ac131a794, type: 2}
+  armorAmount:
+    damageElement: {fileID: 0}
+    amount:
+      baseAmount: 0
+      amountIncreaseEachLevel: 0
+  weaponType: {fileID: 0}
+  damageAmount:
+    damageElement: {fileID: 0}
+    amount:
+      baseAmount:
+        min: 0
+        max: 0
+      amountIncreaseEachLevel:
+        min: 0
+        max: 0
+  harvestDamageAmount:
+    baseAmount:
+      min: 0
+      max: 0
+    amountIncreaseEachLevel:
+      min: 0
+      max: 0
+  moveSpeedRateWhileAttacking: 0
+  ammoCapacity: 0
+  weaponAbility: {fileID: 0}
+  crosshairSetting:
+    hidden: 0
+    expandPerFrameWhileMoving: 3
+    expandPerFrameWhileAttacking: 5
+    shrinkPerFrame: 8
+    minSpread: 10
+    maxSpread: 50
+  increaseStats:
+    baseStats:
+      hp: 0
+      mp: 0
+      accuracy: 0
+      evasion: 2
+      criRate: 0
+      criDmgRate: 0
+      blockRate: 0
+      blockDmgRate: 0
+      moveSpeed: 0
+      atkSpeed: 0
+      weightLimit: 0
+      slotLimit: 0
+      stamina: 0
+      food: 0
+      water: 0
+      armor: 0
+      testStats: 0
+    statsIncreaseEachLevel:
+      hp: 0
+      mp: 0
+      accuracy: 0
+      evasion: 0.5
+      criRate: 0
+      criDmgRate: 0
+      blockRate: 0
+      blockDmgRate: 0
+      moveSpeed: 0
+      atkSpeed: 0
+      weightLimit: 0
+      slotLimit: 0
+      stamina: 0
+      food: 0
+      water: 0
+      armor: 0
+      testStats: 0
+  increaseStatsRate:
+    baseStats:
+      hp: 0
+      mp: 0
+      accuracy: 0
+      evasion: 0
+      criRate: 0
+      criDmgRate: 0
+      blockRate: 0
+      blockDmgRate: 0
+      moveSpeed: 0
+      atkSpeed: 0
+      weightLimit: 0
+      slotLimit: 0
+      stamina: 0
+      food: 0
+      water: 0
+      armor: 0
+      testStats: 0
+    statsIncreaseEachLevel:
+      hp: 0
+      mp: 0
+      accuracy: 0
+      evasion: 0
+      criRate: 0
+      criDmgRate: 0
+      blockRate: 0
+      blockDmgRate: 0
+      moveSpeed: 0
+      atkSpeed: 0
+      weightLimit: 0
+      slotLimit: 0
+      stamina: 0
+      food: 0
+      water: 0
+      armor: 0
+      testStats: 0
+  increaseAttributes: []
+  increaseAttributesRate: []
+  increaseResistances: []
+  increaseArmors: []
+  increaseDamages: []
+  increaseSkillLevels:
+  - skill: {fileID: 11400000, guid: d55d8bfb45f9c574d9120b6ffcd66e3c, type: 2}
+    level: 2
+  - skill: {fileID: 11400000, guid: ab5e0f2076634794394a8a28275204c2, type: 2}
+    level: 1
+  - skill: {fileID: 11400000, guid: aa319f1dfe3afb449b69aa255c39a69b, type: 2}
+    level: 1
+  fireType: 0
+  fireStagger: {x: 0, y: 0}
+  fireSpread: 0
+  equipmentModels:
+  - equipSocket: MFace
+    model: {fileID: 632937926986460395, guid: 29481866d194c8c4281e6ba2af1fae7a, type: 3}
+  - equipSocket: FFace
+    model: {fileID: 3768488500775867862, guid: a1e493e6d5e4ef241a0c5c7bee2e62f2, type: 3}
+  subEquipmentModels: []
+  buff:
+    duration:
+      baseAmount: 0
+      amountIncreaseEachLevel: 0
+    recoveryHp:
+      baseAmount: 0
+      amountIncreaseEachLevel: 0
+    recoveryMp:
+      baseAmount: 0
+      amountIncreaseEachLevel: 0
+    recoveryStamina:
+      baseAmount: 0
+      amountIncreaseEachLevel: 0
+    recoveryFood:
+      baseAmount: 0
+      amountIncreaseEachLevel: 0
+    recoveryWater:
+      baseAmount: 0
+      amountIncreaseEachLevel: 0
+    increaseStats:
+      baseStats:
+        hp: 0
+        mp: 0
+        accuracy: 0
+        evasion: 0
+        criRate: 0
+        criDmgRate: 0
+        blockRate: 0
+        blockDmgRate: 0
+        moveSpeed: 0
+        atkSpeed: 0
+        weightLimit: 0
+        slotLimit: 0
+        stamina: 0
+        food: 0
+        water: 0
+        armor: 0
+        testStats: 0
+      statsIncreaseEachLevel:
+        hp: 0
+        mp: 0
+        accuracy: 0
+        evasion: 0
+        criRate: 0
+        criDmgRate: 0
+        blockRate: 0
+        blockDmgRate: 0
+        moveSpeed: 0
+        atkSpeed: 0
+        weightLimit: 0
+        slotLimit: 0
+        stamina: 0
+        food: 0
+        water: 0
+        armor: 0
+        testStats: 0
+    increaseStatsRate:
+      baseStats:
+        hp: 0
+        mp: 0
+        accuracy: 0
+        evasion: 0
+        criRate: 0
+        criDmgRate: 0
+        blockRate: 0
+        blockDmgRate: 0
+        moveSpeed: 0
+        atkSpeed: 0
+        weightLimit: 0
+        slotLimit: 0
+        stamina: 0
+        food: 0
+        water: 0
+        armor: 0
+        testStats: 0
+      statsIncreaseEachLevel:
+        hp: 0
+        mp: 0
+        accuracy: 0
+        evasion: 0
+        criRate: 0
+        criDmgRate: 0
+        blockRate: 0
+        blockDmgRate: 0
+        moveSpeed: 0
+        atkSpeed: 0
+        weightLimit: 0
+        slotLimit: 0
+        stamina: 0
+        food: 0
+        water: 0
+        armor: 0
+        testStats: 0
+    increaseAttributes: []
+    increaseAttributesRate: []
+    increaseResistances: []
+    increaseArmors: []
+    increaseDamages: []
+    damageOverTimes: []
+    disallowMove: 0
+    disallowAttack: 0
+    disallowUseSkill: 0
+    disallowUseItem: 0
+    isHide: 0
+    muteFootstepSound: 0
+    effects: []
+  ammoType: {fileID: 0}
+  buildingEntity: {fileID: 0}
+  petEntity: {fileID: 0}
+  socketEnhanceEffect:
+    stats:
+      hp: 0
+      mp: 0
+      accuracy: 0
+      evasion: 0
+      criRate: 0
+      criDmgRate: 0
+      blockRate: 0
+      blockDmgRate: 0
+      moveSpeed: 0
+      atkSpeed: 0
+      weightLimit: 0
+      slotLimit: 0
+      stamina: 0
+      food: 0
+      water: 0
+      armor: 0
+      testStats: 0
+    statsRate:
+      hp: 0
+      mp: 0
+      accuracy: 0
+      evasion: 0
+      criRate: 0
+      criDmgRate: 0
+      blockRate: 0
+      blockDmgRate: 0
+      moveSpeed: 0
+      atkSpeed: 0
+      weightLimit: 0
+      slotLimit: 0
+      stamina: 0
+      food: 0
+      water: 0
+      armor: 0
+      testStats: 0
+    attributes: []
+    attributesRate: []
+    resistances: []
+    armors: []
+    damages: []
+    skills: []
+  mountEntity: {fileID: 0}
+  attributeAmount:
+    attribute: {fileID: 0}
+    amount: 0
+  skillLevel:
+    skill: {fileID: 0}
+    level: 0
