@@ -11,14 +11,14 @@ namespace MultiplayerARPG
     [RequireComponent(typeof(CharacterModelManager))]
     [RequireComponent(typeof(CharacterRecoveryComponent))]
     [RequireComponent(typeof(CharacterSkillAndBuffComponent))]
-    public abstract partial class BaseCharacterEntity : DamageableEntity, ICharacterData, IAttackerEntity
+    public abstract partial class BaseCharacterEntity : DamageableEntity, ICharacterData, IGameEntity
     {
         public const float ACTION_DELAY = 0.2f;
         public const float COMBATANT_MESSAGE_DELAY = 1f;
         public const float RESPAWN_GROUNDED_CHECK_DURATION = 1f;
         public const float MOUNT_DELAY = 1f;
-        public const int OVERLAP_COLLIDER_SIZE_FOR_ATTACK = 64;
-        public const int RAYCAST_SIZE_FOR_ATTACK = 64;
+        public const int OVERLAP_COLLIDER_SIZE_FOR_ATTACK = 16;
+        public const int RAYCAST_SIZE_FOR_ATTACK = 8;
         public const int OVERLAP_COLLIDER_SIZE_FOR_FIND = 32;
 
         protected struct SyncListRecachingState
@@ -28,23 +28,9 @@ namespace MultiplayerARPG
             public LiteNetLibSyncList.Operation operation;
             public int index;
         }
-
-        protected struct RaycastHitComparer : IComparer<RaycastHit>, IComparer<RaycastHit2D>
-        {
-            public int Compare(RaycastHit x, RaycastHit y)
-            {
-                return x.distance.CompareTo(y.distance);
-            }
-
-            public int Compare(RaycastHit2D x, RaycastHit2D y)
-            {
-                return x.distance.CompareTo(y.distance);
-            }
-        }
-
-        [HideInInspector, System.NonSerialized]
+        
         // This will be TRUE when this character enter to safe area
-        public bool isInSafeArea;
+        public bool IsInSafeArea { get; set; }
 
         #region Serialize data
         [Header("Character Settings")]
@@ -71,13 +57,13 @@ namespace MultiplayerARPG
         protected readonly Dictionary<string, int> equipItemIndexes = new Dictionary<string, int>();
         protected AnimActionType animActionType;
         protected short reloadingAmmoAmount;
-        public bool isAttackingOrUsingSkill { get; protected set; }
-        public bool isCastingSkillCanBeInterrupted { get; protected set; }
-        public bool isCastingSkillInterrupted { get; protected set; }
-        public float castingSkillDuration { get; protected set; }
-        public float castingSkillCountDown { get; protected set; }
-        public float moveSpeedRateWhileAttackOrUseSkill { get; protected set; }
-        public float respawnGroundedCheckCountDown { get; protected set; }
+        public bool IsAttackingOrUsingSkill { get; protected set; }
+        public bool IsCastingSkillCanBeInterrupted { get; protected set; }
+        public bool IsCastingSkillInterrupted { get; protected set; }
+        public float CastingSkillDuration { get; protected set; }
+        public float CastingSkillCountDown { get; protected set; }
+        public float MoveSpeedRateWhileAttackOrUseSkill { get; protected set; }
+        public float RespawnGroundedCheckCountDown { get; protected set; }
         protected float lastActionTime;
         protected float lastCombatantErrorTime;
         protected float lastMountTime;
@@ -120,6 +106,11 @@ namespace MultiplayerARPG
         public BaseCharacterModel CharacterModel
         {
             get { return ModelManager.ActiveModel; }
+        }
+
+        public BaseCharacterModel FpsModel
+        {
+            get { return ModelManager.FpsModel; }
         }
 
         public Transform MeleeDamageTransform
@@ -226,7 +217,7 @@ namespace MultiplayerARPG
             if (PassengingVehicleEntity != null)
                 tempEnableMovement = false;
 
-            if (respawnGroundedCheckCountDown <= 0)
+            if (RespawnGroundedCheckCountDown <= 0)
             {
                 // Killing character when it fall below dead Y
                 if (gameInstance.DimensionType == DimensionType.Dimension3D &&
@@ -245,7 +236,7 @@ namespace MultiplayerARPG
             }
             else
             {
-                respawnGroundedCheckCountDown -= Time.deltaTime;
+                RespawnGroundedCheckCountDown -= Time.deltaTime;
             }
 
             // Clear data when character dead
@@ -253,7 +244,7 @@ namespace MultiplayerARPG
             {
                 // Clear action states when character dead
                 animActionType = AnimActionType.None;
-                isAttackingOrUsingSkill = false;
+                IsAttackingOrUsingSkill = false;
                 InterruptCastingSkill();
                 ExitVehicle();
             }
@@ -267,11 +258,11 @@ namespace MultiplayerARPG
             // Update current model
             model = ModelManager.ActiveModel;
             // Update casting skill count down, will show gage at clients
-            if (castingSkillCountDown > 0)
+            if (CastingSkillCountDown > 0)
             {
-                castingSkillCountDown -= Time.deltaTime;
-                if (castingSkillCountDown < 0)
-                    castingSkillCountDown = 0;
+                CastingSkillCountDown -= Time.deltaTime;
+                if (CastingSkillCountDown < 0)
+                    CastingSkillCountDown = 0;
             }
             // Update animation states at clients
             if (IsClient)
@@ -287,6 +278,15 @@ namespace MultiplayerARPG
                 {
                     // Set current direction to character model 2D
                     (CharacterModel as ICharacterModel2D).CurrentDirectionType = CurrentDirectionType;
+                }
+                if (FpsModel != null)
+                {
+                    // Update is dead state
+                    FpsModel.SetIsDead(IsDead());
+                    // Update move speed multiplier
+                    FpsModel.SetMoveAnimationSpeedMultiplier(MoveAnimationSpeedMultiplier);
+                    // Update movement animation
+                    FpsModel.SetMovementState(MovementState);
                 }
             }
             // Set character model hide state
@@ -308,7 +308,7 @@ namespace MultiplayerARPG
         #endregion
 
         #region Attack / Receive Damage / Dead / Spawn
-        public void ValidateRecovery(BaseCharacterEntity attacker = null)
+        public void ValidateRecovery(IGameEntity causer = null)
         {
             if (!IsServer)
                 return;
@@ -340,7 +340,7 @@ namespace MultiplayerARPG
                 CurrentWater = this.GetCaches().MaxWater;
 
             if (IsDead())
-                Killed(attacker);
+                Killed(causer);
         }
 
         public void GetDamagePositionAndRotation(DamageType damageType, bool isLeftHand, Vector3 aimPosition, Vector3 stagger, out Vector3 position, out Vector3 direction, out Quaternion rotation)
@@ -379,24 +379,31 @@ namespace MultiplayerARPG
                     break;
                 case DamageType.Missile:
                 case DamageType.Raycast:
-                    transform = !isLeftHand ? CharacterModel.GetRightHandMissileDamageTransform() : CharacterModel.GetLeftHandMissileDamageTransform();
-                    // Use position from default missile damage transform
+                    if (ModelManager.IsFpsMode)
+                    {
+                        if (FpsModel != null)
+                        {
+                            // Spawn bullets from fps model
+                            transform = isLeftHand ? FpsModel.GetLeftHandMissileDamageTransform() : FpsModel.GetRightHandMissileDamageTransform();
+                        }
+                    }
+                    else
+                    {
+                        // Spawn bullets from tps model
+                        transform = isLeftHand ? CharacterModel.GetLeftHandMissileDamageTransform() : CharacterModel.GetRightHandMissileDamageTransform();
+                    }
+
                     if (transform == null)
+                    {
+                        // Still no missile transform, use default missile transform
                         transform = MissileDamageTransform;
+                    }
                     break;
             }
             return transform;
         }
 
-        public override void ReceivedDamage(IAttackerEntity attacker, CombatAmountType combatAmountType, int damage)
-        {
-            base.ReceivedDamage(attacker, combatAmountType, damage);
-            InterruptCastingSkill();
-            if (attacker.Entity is BaseCharacterEntity)
-                gameInstance.GameplayRule.OnCharacterReceivedDamage(attacker.Entity as BaseCharacterEntity, this, combatAmountType, damage);
-        }
-
-        public virtual void Killed(BaseCharacterEntity lastAttacker)
+        public virtual void Killed(IGameEntity lastAttacker)
         {
             StopAllCoroutines();
             buffs.Clear();
@@ -414,7 +421,7 @@ namespace MultiplayerARPG
             CurrentStamina = this.GetCaches().MaxStamina;
             CurrentFood = this.GetCaches().MaxFood;
             CurrentWater = this.GetCaches().MaxWater;
-            respawnGroundedCheckCountDown = RESPAWN_GROUNDED_CHECK_DURATION;
+            RespawnGroundedCheckCountDown = RESPAWN_GROUNDED_CHECK_DURATION;
             // Send OnRespawn to owner player only
             RequestOnRespawn();
         }
@@ -563,7 +570,7 @@ namespace MultiplayerARPG
             return false;
         }
 
-        public override void ReceiveDamage(IAttackerEntity attacker, CharacterItem weapon, Dictionary<DamageElement, MinMaxFloat> damageAmounts, BaseSkill skill, short skillLevel)
+        public override void ReceiveDamage(IGameEntity attacker, CharacterItem weapon, Dictionary<DamageElement, MinMaxFloat> damageAmounts, BaseSkill skill, short skillLevel)
         {
             if (!IsServer || IsDead() || !CanReceiveDamageFrom(attacker))
                 return;
@@ -577,10 +584,13 @@ namespace MultiplayerARPG
             ReceiveDamageFunction(attacker, weapon, damageAmounts, skill, skillLevel);
         }
 
-        internal void ReceiveDamageFunction(IAttackerEntity attacker, CharacterItem weapon, Dictionary<DamageElement, MinMaxFloat> damageAmounts, BaseSkill skill, short skillLevel)
+        internal void ReceiveDamageFunction(IGameEntity attacker, CharacterItem weapon, Dictionary<DamageElement, MinMaxFloat> damageAmounts, BaseSkill skill, short skillLevel)
         {
             base.ReceiveDamage(attacker, weapon, damageAmounts, skill, skillLevel);
-            BaseCharacterEntity attackerCharacter = attacker as BaseCharacterEntity;
+
+            BaseCharacterEntity attackerCharacter = null;
+            if (attacker != null)
+                attackerCharacter = attacker.Entity as BaseCharacterEntity;
 
             // Notify enemy spotted when received damage from enemy
             NotifyEnemySpottedToAllies(attackerCharacter);
@@ -588,18 +598,26 @@ namespace MultiplayerARPG
             // Notify enemy spotted when damage taken to enemy
             attackerCharacter.NotifyEnemySpottedToAllies(this);
 
-            // Calculate chance to hit
-            float hitChance = gameInstance.GameplayRule.GetHitChance(attackerCharacter, this);
-            // If miss, return don't calculate damages
-            if (Random.value > hitChance)
+            bool isCritical = false;
+            bool isBlocked = false;
+            if (attackerCharacter != null)
             {
-                ReceivedDamage(attackerCharacter, CombatAmountType.Miss, 0);
-                return;
+                // Calculate chance to critical
+                isCritical = Random.value <= gameInstance.GameplayRule.GetCriticalChance(attackerCharacter, this);
+
+                // If miss, return don't calculate damages
+                if (!isCritical && Random.value > gameInstance.GameplayRule.GetHitChance(attackerCharacter, this))
+                {
+                    ReceivedDamage(attackerCharacter, CombatAmountType.Miss, 0);
+                    return;
+                }
+
+                isBlocked = Random.value <= gameInstance.GameplayRule.GetBlockChance(attackerCharacter, this);
             }
 
             // Calculate damages
             float calculatingTotalDamage = 0f;
-            if (damageAmounts.Count > 0)
+            if (damageAmounts != null && damageAmounts.Count > 0)
             {
                 MinMaxFloat damageAmount;
                 float tempReceivingDamage;
@@ -612,45 +630,48 @@ namespace MultiplayerARPG
                 }
             }
 
-            // Calculate chance to critical
-            float criticalChance = gameInstance.GameplayRule.GetCriticalChance(attackerCharacter, this);
-            bool isCritical = Random.value <= criticalChance;
-            // If critical occurs
-            if (isCritical)
-                calculatingTotalDamage = gameInstance.GameplayRule.GetCriticalDamage(attackerCharacter, this, calculatingTotalDamage);
+            if (attackerCharacter != null)
+            {
+                // If critical occurs
+                if (isCritical)
+                    calculatingTotalDamage = gameInstance.GameplayRule.GetCriticalDamage(attackerCharacter, this, calculatingTotalDamage);
 
-            // Calculate chance to block
-            float blockChance = gameInstance.GameplayRule.GetBlockChance(attackerCharacter, this);
-            bool isBlocked = Random.value <= blockChance;
-            // If block occurs
-            if (isBlocked)
-                calculatingTotalDamage = gameInstance.GameplayRule.GetBlockDamage(attackerCharacter, this, calculatingTotalDamage);
+                // If block occurs
+                if (isBlocked)
+                    calculatingTotalDamage = gameInstance.GameplayRule.GetBlockDamage(attackerCharacter, this, calculatingTotalDamage);
+            }
 
             // Apply damages
             int totalDamage = (int)calculatingTotalDamage;
             CurrentHp -= totalDamage;
 
+            CombatAmountType combatAmountType = CombatAmountType.NormalDamage;
             if (isBlocked)
-                ReceivedDamage(attackerCharacter, CombatAmountType.BlockedDamage, totalDamage);
+                combatAmountType = CombatAmountType.BlockedDamage;
             else if (isCritical)
-                ReceivedDamage(attackerCharacter, CombatAmountType.CriticalDamage, totalDamage);
-            else
-                ReceivedDamage(attackerCharacter, CombatAmountType.NormalDamage, totalDamage);
+                combatAmountType = CombatAmountType.CriticalDamage;
+            ReceivedDamage(attacker, combatAmountType, totalDamage);
 
-            if (CharacterModel != null)
-                CharacterModel.PlayHitAnimation();
+            // Decrease equipment durability
+            gameInstance.GameplayRule.OnCharacterReceivedDamage(attackerCharacter, this, combatAmountType, totalDamage);
+
+            // Interrupt casting skill when receive damage
+            InterruptCastingSkill();
+
+            // Only TPS model will plays hit animation
+            CharacterModel.PlayHitAnimation();
 
             // If current hp <= 0, character dead
             if (IsDead())
             {
                 // Call killed function, this should be called only once when dead
-                ValidateRecovery(attackerCharacter);
+                ValidateRecovery(attacker);
             }
             else
             {
                 // Apply debuff if character is not dead
                 if (skill != null && skill.IsDebuff())
-                    ApplyBuff(skill.DataId, BuffType.SkillDebuff, skillLevel);
+                    ApplyBuff(skill.DataId, BuffType.SkillDebuff, skillLevel, attacker);
             }
         }
         #endregion
@@ -802,32 +823,43 @@ namespace MultiplayerARPG
                 case DamageType.Melee:
                     if (damageInfo.hitOnlySelectedTarget)
                     {
+                        IDamageableEntity damageTakenTarget = null;
+                        IDamageableEntity selectedTarget = null;
+                        bool hasSelectedTarget = TryGetTargetEntity(out selectedTarget);
                         // If hit only selected target, find selected character (only 1 character) to apply damage
-                        if (!TryGetTargetEntity(out tempDamageableEntity))
+                        int tempOverlapSize = OverlapObjects_ForAttackFunctions(damagePosition, damageInfo.hitDistance, gameInstance.GetDamageableLayerMask());
+                        if (tempOverlapSize == 0)
+                            return;
+                        // Find characters that receiving damages
+                        for (int tempLoopCounter = 0; tempLoopCounter < tempOverlapSize; ++tempLoopCounter)
                         {
-                            int tempOverlapSize = OverlapObjects_ForAttackFunctions(damagePosition, damageInfo.hitDistance, gameInstance.GetDamageableLayerMask());
-                            if (tempOverlapSize == 0)
-                                return;
-                            // Target entity not set, use overlapped object as target
-                            for (int tempLoopCounter = 0; tempLoopCounter < tempOverlapSize; ++tempLoopCounter)
+                            tempGameObject = GetOverlapObject_ForAttackFunctions(tempLoopCounter);
+                            tempDamageableEntity = tempGameObject.GetComponent<IDamageableEntity>();
+                            if (tempDamageableEntity == null || tempDamageableEntity.Entity == this ||
+                                tempDamageableEntity.IsDead() || !tempDamageableEntity.CanReceiveDamageFrom(this) ||
+                                !IsPositionInFov(damageInfo.hitFov, tempDamageableEntity.transform.position))
                             {
-                                tempGameObject = GetOverlapObject_ForAttackFunctions(tempLoopCounter);
-                                tempDamageableEntity = tempGameObject.GetComponent<IDamageableEntity>();
-                                if (tempDamageableEntity != null &&
-                                    (!(tempDamageableEntity.Entity is BaseCharacterEntity) || tempDamageableEntity.Entity != this))
-                                    break;
+                                // Entity can't receive damage, so skip it.
+                                continue;
+                            }
+
+                            // Set damage taken target, this entity will receives damages
+                            damageTakenTarget = tempDamageableEntity;
+
+                            if (hasSelectedTarget && selectedTarget.Entity == tempDamageableEntity.Entity)
+                            {
+                                // This is selected target, so this is character which must receives damages
+                                break;
                             }
                         }
-                        // Target receive damage
-                        if (tempDamageableEntity != null && !tempDamageableEntity.IsDead() &&
-                            (!(tempDamageableEntity.Entity is BaseCharacterEntity) || tempDamageableEntity.Entity != this) &&
-                            IsPositionInFov(damageInfo.hitFov, tempDamageableEntity.transform.position))
+                        // Only 1 target will receives damages
+                        if (damageTakenTarget != null)
                         {
                             // Pass all receive damage condition, then apply damages
                             if (IsServer)
-                                tempDamageableEntity.ReceiveDamage(this, weapon, damageAmounts, skill, skillLevel);
+                                damageTakenTarget.ReceiveDamage(this, weapon, damageAmounts, skill, skillLevel);
                             if (IsClient)
-                                tempDamageableEntity.PlayHitEffects(damageAmounts.Keys, skill);
+                                damageTakenTarget.PlayHitEffects(damageAmounts.Keys, skill);
                         }
                     }
                     else
@@ -841,17 +873,18 @@ namespace MultiplayerARPG
                         {
                             tempGameObject = GetOverlapObject_ForAttackFunctions(tempLoopCounter);
                             tempDamageableEntity = tempGameObject.GetComponent<IDamageableEntity>();
-                            // Target receive damage
-                            if (tempDamageableEntity != null && !tempDamageableEntity.IsDead() &&
-                                (!(tempDamageableEntity.Entity is BaseCharacterEntity) || tempDamageableEntity.Entity != this) &&
-                                IsPositionInFov(damageInfo.hitFov, tempDamageableEntity.transform.position))
+                            if (tempDamageableEntity == null || tempDamageableEntity.Entity == this ||
+                                tempDamageableEntity.IsDead() || !tempDamageableEntity.CanReceiveDamageFrom(this) ||
+                                !IsPositionInFov(damageInfo.hitFov, tempDamageableEntity.transform.position))
                             {
-                                // Pass all receive damage condition, then apply damages
-                                if (IsServer)
-                                    tempDamageableEntity.ReceiveDamage(this, weapon, damageAmounts, skill, skillLevel);
-                                if (IsClient)
-                                    tempDamageableEntity.PlayHitEffects(damageAmounts.Keys, skill);
+                                // Entity can't receive damage, so skip it.
+                                continue;
                             }
+                            // Target receives damages
+                            if (IsServer)
+                                tempDamageableEntity.ReceiveDamage(this, weapon, damageAmounts, skill, skillLevel);
+                            if (IsClient)
+                                tempDamageableEntity.PlayHitEffects(damageAmounts.Keys, skill);
                         }
                     }
                     break;
@@ -870,54 +903,49 @@ namespace MultiplayerARPG
                     }
                     break;
                 case DamageType.Raycast:
-                    // Just raycast to any characters to apply damage
+                    float minDistance = damageInfo.missileDistance;
+                    // Just raycast to any entity to apply damage
                     int tempRaycastSize = RaycastObjects_ForAttackFunctions(damagePosition, damageDirection, damageInfo.missileDistance, Physics.DefaultRaycastLayers);
-                    if (tempRaycastSize == 0)
+                    if (tempRaycastSize > 0)
                     {
-                        // Spawn projectile effect, it will move to target but it won't apply damage because it is just effect
-                        if (IsClient && damageInfo.projectileEffect != null)
+                        // Sort index
+                        Vector3 point;
+                        Vector3 normal;
+                        float distance;
+                        Transform tempHitTransform;
+                        // Find characters that receiving damages
+                        for (int tempLoopCounter = 0; tempLoopCounter < tempRaycastSize; ++tempLoopCounter)
                         {
-                            Instantiate(damageInfo.projectileEffect, damagePosition, damageRotation)
-                                .Setup(damageInfo.missileDistance, damageInfo.missileSpeed);
-                        }
-                        return;
+                            tempHitTransform = GetRaycastObject_ForAttackFunctions(tempLoopCounter, out point, out normal, out distance);
+                            if (distance < minDistance)
+                                minDistance = distance;
+                            tempDamageableEntity = tempHitTransform.GetComponent<IDamageableEntity>();
+                            if (tempDamageableEntity != null)
+                            {
+                                if (tempDamageableEntity.Entity == this)
+                                    continue;
+
+                                // Target receives damages
+                                if (!tempDamageableEntity.IsDead() && tempDamageableEntity.CanReceiveDamageFrom(this))
+                                {
+                                    if (IsServer)
+                                        tempDamageableEntity.ReceiveDamage(this, weapon, damageAmounts, skill, skillLevel);
+                                    if (IsClient)
+                                        tempDamageableEntity.PlayHitEffects(damageAmounts.Keys, skill);
+                                }
+                            }
+                            else
+                            {
+                                // Hit wall... so break the loop
+                                break;
+                            }
+                        } // End of for...loop (raycast result)
                     }
-                    // Sort index
-                    Vector3 point;
-                    Vector3 normal;
-                    float distance;
-                    Transform tempHitTransform;
-                    // Find characters that receiving damages
-                    for (int tempLoopCounter = 0; tempLoopCounter < tempRaycastSize; ++tempLoopCounter)
+                    // Spawn projectile effect, it will move to target but it won't apply damage because it is just effect
+                    if (IsClient && damageInfo.projectileEffect != null)
                     {
-                        tempHitTransform = GetRaycastObject_ForAttackFunctions(tempLoopCounter, out point, out normal, out distance);
-                        tempDamageableEntity = tempHitTransform.GetComponent<IDamageableEntity>();
-                        // Hit walls or harvestable entity, skip
-                        if (tempDamageableEntity == null || !(tempDamageableEntity.Entity is BaseCharacterEntity))
-                        {
-                            // Spawn projectile effect, it will move to target but it won't apply damage because it is just effect
-                            if (IsClient && damageInfo.projectileEffect != null)
-                            {
-                                Instantiate(damageInfo.projectileEffect, damagePosition, damageRotation)
-                                    .Setup(distance, damageInfo.missileSpeed);
-                            }
-                            return;
-                        }
-                        // Target receive damage
-                        if (tempDamageableEntity != null && !tempDamageableEntity.IsDead() && tempDamageableEntity.Entity != this)
-                        {
-                            // Pass all receive damage condition, then apply damages
-                            if (IsServer)
-                                tempDamageableEntity.ReceiveDamage(this, weapon, damageAmounts, skill, skillLevel);
-                            if (IsClient)
-                                tempDamageableEntity.PlayHitEffects(damageAmounts.Keys, skill);
-                            // Spawn projectile effect, it will move to target but it won't apply damage because it is just effect
-                            if (IsClient && damageInfo.projectileEffect != null)
-                            {
-                                Instantiate(damageInfo.projectileEffect, damagePosition, damageRotation)
-                                    .Setup(distance, damageInfo.missileSpeed);
-                            }
-                        }
+                        Instantiate(damageInfo.projectileEffect, damagePosition, damageRotation)
+                            .Setup(minDistance, damageInfo.missileSpeed);
                     }
                     break;
             }
@@ -936,7 +964,7 @@ namespace MultiplayerARPG
 
         public virtual bool CanDoActions()
         {
-            return !IsDead() && !IsPlayingActionAnimation() && !isAttackingOrUsingSkill;
+            return !IsDead() && !IsPlayingActionAnimation() && !IsAttackingOrUsingSkill;
         }
 
         public override sealed float GetMoveSpeed()
@@ -997,16 +1025,9 @@ namespace MultiplayerARPG
         #region Find objects helpers
         public int RaycastObjects_ForAttackFunctions(Vector3 origin, Vector3 direction, float distance, int layerMask)
         {
-            int count = 0;
             if (gameInstance.DimensionType == DimensionType.Dimension2D)
-            {
-                count = Physics2D.RaycastNonAlloc(origin, direction, raycasts2D_ForAttackFunctions, distance, layerMask);
-                System.Array.Sort(raycasts2D_ForAttackFunctions, 0, count, new RaycastHitComparer());
-                return count;
-            }
-            count = Physics.RaycastNonAlloc(origin, direction, raycasts_ForAttackFunctions, distance, layerMask);
-            System.Array.Sort(raycasts_ForAttackFunctions, 0, count, new RaycastHitComparer());
-            return count;
+                return PhysicUtils.SortedRaycastNonAlloc2D(origin, direction, raycasts2D_ForAttackFunctions, distance, layerMask);
+            return PhysicUtils.SortedRaycastNonAlloc3D(origin, direction, raycasts_ForAttackFunctions, distance, layerMask);
         }
 
         public Transform GetRaycastObject_ForAttackFunctions(int index, out Vector3 point, out Vector3 normal, out float distance)
@@ -1241,14 +1262,13 @@ namespace MultiplayerARPG
         }
         #endregion
 
-        private void NotifyEnemySpottedToAllies(BaseCharacterEntity enemy)
+        protected virtual void NotifyEnemySpottedToAllies(BaseCharacterEntity enemy)
         {
-            // Warn that this character received damage to nearby characters
-            List<BaseCharacterEntity> foundCharacters = FindAliveCharacters<BaseCharacterEntity>(gameInstance.enemySpottedNotifyDistance, true, false, false);
-            if (foundCharacters == null || foundCharacters.Count == 0) return;
-            foreach (BaseCharacterEntity foundCharacter in foundCharacters)
+            foreach (CharacterSummon summon in Summons)
             {
-                foundCharacter.NotifyEnemySpotted(this, enemy);
+                if (summon.CacheEntity == null)
+                    continue;
+                summon.CacheEntity.NotifyEnemySpotted(this, enemy);
             }
         }
 
@@ -1271,7 +1291,7 @@ namespace MultiplayerARPG
             return !IsAlly(characterEntity) && !IsEnemy(characterEntity);
         }
 
-        public override sealed bool CanReceiveDamageFrom(IAttackerEntity attacker)
+        public override sealed bool CanReceiveDamageFrom(IGameEntity attacker)
         {
             if (attacker == null || attacker.Entity == null)
                 return true;
@@ -1280,7 +1300,7 @@ namespace MultiplayerARPG
             if (characterEntity == null)
                 return true;
 
-            if (isInSafeArea || characterEntity.isInSafeArea)
+            if (IsInSafeArea || characterEntity.IsInSafeArea)
             {
                 // If this character or another character is in safe area so it cannot receive damage
                 return false;

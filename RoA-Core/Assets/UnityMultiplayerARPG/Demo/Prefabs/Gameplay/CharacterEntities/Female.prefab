@@ -1329,13 +1329,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   hiddingObjects:
   - {fileID: 1992973201746340}
+  hiddingRenderers: []
   effectContainers:
   - effectSocket: Floor
     transform: {fileID: 4423592954269084}
   - effectSocket: Body
     transform: {fileID: 4850134687994540}
   setEffectContainersBySetters: 0
-  modelManager: {fileID: 114459446951564280}
   equipmentContainers:
   - equipSocket: Head
     defaultModel: {fileID: 1538773673882184}
@@ -3123,6 +3123,7 @@ GameObject:
   - component: {fileID: 114214664333673166}
   - component: {fileID: 114418237684216524}
   - component: {fileID: 114459446951564280}
+  - component: {fileID: 114745390288779626}
   m_Layer: 8
   m_Name: Female
   m_TagString: Untagged
@@ -3171,12 +3172,239 @@ Animator:
     Humanoid clips.\n\tTransform 'Knee_R'\n\tTransform 'Ankle_L'\n\tTransform 'Ankle_R'\n\tTransform
     'Hip_R'\n\tTransform 'Hip_L'\n\tTransform 'Knee_L'\n\tTransform 'Root_M'\n\tTransform
     'Knee_R'\n\tTransform 'Ankle_L'\n\tTransform 'Toes_L'\n\tand more ...\n\tFrom
+    animation clip 'AnimSD@Ridehorse'\nBinding warning: Some generic clip(s) animate
+    transforms that are already bound by a Humanoid avatar. These transforms can only
+    be changed by Humanoid clips.\n\tTransform 'Knee_R'\n\tTransform 'Ankle_L'\n\tTransform
+    'Ankle_R'\n\tTransform 'Hip_R'\n\tTransform 'Hip_L'\n\tTransform 'Knee_L'\n\tTransform
+    'Root_M'\n\tTransform 'Knee_R'\n\tTransform 'Ankle_L'\n\tTransform 'Toes_L'\n\tand
+    more ...\n\tFrom animation clip 'AnimSD@Ridehorse'\n\tFrom animation clip 'AnimSD@Ridehorse'\nBinding
+    warning: Some generic clip(s) animate transforms that are already bound by a Humanoid
+    avatar. These transforms can only be changed by Humanoid clips.\n\tTransform 'Knee_R'\n\tTransform
+    'Ankle_L'\n\tTransform 'Ankle_R'\n\tTransform 'Hip_R'\n\tTransform 'Hip_L'\n\tTransform
+    'Knee_L'\n\tTransform 'Root_M'\n\tTransform 'Knee_R'\n\tTransform 'Ankle_L'\n\tTransform
+    'Toes_L'\n\tand more ...\n\tFrom animation clip 'AnimSD@Ridehorse'\n\tFrom animation
+    clip 'AnimSD@Ridehorse'\n\tFrom animation clip 'AnimSD@Ridehorse'\nBinding warning:
+    Some generic clip(s) animate transforms that are already bound by a Humanoid avatar.
+    These transforms can only be changed by Humanoid clips.\n\tTransform 'Knee_R'\n\tTransform
+    'Ankle_L'\n\tTransform 'Ankle_R'\n\tTransform 'Hip_R'\n\tTransform 'Hip_L'\n\tTransform
+    'Knee_L'\n\tTransform 'Root_M'\n\tTransform 'Knee_R'\n\tTransform 'Ankle_L'\n\tTransform
+    'Toes_L'\n\tand more ...\n\tFrom animation clip 'AnimSD@Ridehorse'\n\tFrom animation
+    clip 'AnimSD@Ridehorse'\n\tFrom animation clip 'AnimSD@Ridehorse'\n\tFrom animation
+    clip 'AnimSD@Ridehorse'\nBinding warning: Some generic clip(s) animate transforms
+    that are already bound by a Humanoid avatar. These transforms can only be changed
+    by Humanoid clips.\n\tTransform 'Knee_R'\n\tTransform 'Ankle_L'\n\tTransform 'Ankle_R'\n\tTransform
+    'Hip_R'\n\tTransform 'Hip_L'\n\tTransform 'Knee_L'\n\tTransform 'Root_M'\n\tTransform
+    'Knee_R'\n\tTransform 'Ankle_L'\n\tTransform 'Toes_L'\n\tand more ...\n\tFrom
     animation clip 'AnimSD@Ridehorse'\n\tFrom animation clip 'AnimSD@Ridehorse'\n\tFrom
+    animation clip 'AnimSD@Ridehorse'\n\tFrom animation clip 'AnimSD@Ridehorse'\n\tFrom
+    animation clip 'AnimSD@Ridehorse'\nBinding warning: Some generic clip(s) animate
+    transforms that are already bound by a Humanoid avatar. These transforms can only
+    be changed by Humanoid clips.\n\tTransform 'Knee_R'\n\tTransform 'Ankle_L'\n\tTransform
+    'Ankle_R'\n\tTransform 'Hip_R'\n\tTransform 'Hip_L'\n\tTransform 'Knee_L'\n\tTransform
+    'Root_M'\n\tTransform 'Knee_R'\n\tTransform 'Ankle_L'\n\tTransform 'Toes_L'\n\tand
+    more ...\n\tFrom animation clip 'AnimSD@Ridehorse'\n\tFrom animation clip 'AnimSD@Ridehorse'\n\tFrom
+    animation clip 'AnimSD@Ridehorse'\n\tFrom animation clip 'AnimSD@Ridehorse'\n\tFrom
+    animation clip 'AnimSD@Ridehorse'\n\tFrom animation clip 'AnimSD@Ridehorse'\nBinding
+    warning: Some generic clip(s) animate transforms that are already bound by a Humanoid
+    avatar. These transforms can only be changed by Humanoid clips.\n\tTransform 'Knee_R'\n\tTransform
+    'Ankle_L'\n\tTransform 'Ankle_R'\n\tTransform 'Hip_R'\n\tTransform 'Hip_L'\n\tTransform
+    'Knee_L'\n\tTransform 'Root_M'\n\tTransform 'Knee_R'\n\tTransform 'Ankle_L'\n\tTransform
+    'Toes_L'\n\tand more ...\n\tFrom animation clip 'AnimSD@Ridehorse'\n\tFrom animation
+    clip 'AnimSD@Ridehorse'\n\tFrom animation clip 'AnimSD@Ridehorse'\n\tFrom animation
+    clip 'AnimSD@Ridehorse'\n\tFrom animation clip 'AnimSD@Ridehorse'\n\tFrom animation
+    clip 'AnimSD@Ridehorse'\n\tFrom animation clip 'AnimSD@Ridehorse'\nBinding warning:
+    Some generic clip(s) animate transforms that are already bound by a Humanoid avatar.
+    These transforms can only be changed by Humanoid clips.\n\tTransform 'Knee_R'\n\tTransform
+    'Ankle_L'\n\tTransform 'Ankle_R'\n\tTransform 'Hip_R'\n\tTransform 'Hip_L'\n\tTransform
+    'Knee_L'\n\tTransform 'Root_M'\n\tTransform 'Knee_R'\n\tTransform 'Ankle_L'\n\tTransform
+    'Toes_L'\n\tand more ...\n\tFrom animation clip 'AnimSD@Ridehorse'\n\tFrom animation
+    clip 'AnimSD@Ridehorse'\n\tFrom animation clip 'AnimSD@Ridehorse'\n\tFrom animation
+    clip 'AnimSD@Ridehorse'\n\tFrom animation clip 'AnimSD@Ridehorse'\n\tFrom animation
+    clip 'AnimSD@Ridehorse'\n\tFrom animation clip 'AnimSD@Ridehorse'\n\tFrom animation
+    clip 'AnimSD@Ridehorse'\nBinding warning: Some generic clip(s) animate transforms
+    that are already bound by a Humanoid avatar. These transforms can only be changed
+    by Humanoid clips.\n\tTransform 'Knee_R'\n\tTransform 'Ankle_L'\n\tTransform 'Ankle_R'\n\tTransform
+    'Hip_R'\n\tTransform 'Hip_L'\n\tTransform 'Knee_L'\n\tTransform 'Root_M'\n\tTransform
+    'Knee_R'\n\tTransform 'Ankle_L'\n\tTransform 'Toes_L'\n\tand more ...\n\tFrom
+    animation clip 'AnimSD@Ridehorse'\n\tFrom animation clip 'AnimSD@Ridehorse'\n\tFrom
+    animation clip 'AnimSD@Ridehorse'\n\tFrom animation clip 'AnimSD@Ridehorse'\n\tFrom
+    animation clip 'AnimSD@Ridehorse'\n\tFrom animation clip 'AnimSD@Ridehorse'\n\tFrom
+    animation clip 'AnimSD@Ridehorse'\n\tFrom animation clip 'AnimSD@Ridehorse'\n\tFrom
+    animation clip 'AnimSD@Ridehorse'\nBinding warning: Some generic clip(s) animate
+    transforms that are already bound by a Humanoid avatar. These transforms can only
+    be changed by Humanoid clips.\n\tTransform 'Knee_R'\n\tTransform 'Ankle_L'\n\tTransform
+    'Ankle_R'\n\tTransform 'Hip_R'\n\tTransform 'Hip_L'\n\tTransform 'Knee_L'\n\tTransform
+    'Root_M'\n\tTransform 'Knee_R'\n\tTransform 'Ankle_L'\n\tTransform 'Toes_L'\n\tand
+    more ...\n\tFrom animation clip 'AnimSD@Ridehorse'\n\tFrom animation clip 'AnimSD@Ridehorse'\n\tFrom
     animation clip 'AnimSD@Ridehorse'\n\tFrom animation clip 'AnimSD@Ridehorse'\n\tFrom
     animation clip 'AnimSD@Ridehorse'\n\tFrom animation clip 'AnimSD@Ridehorse'\n\tFrom
     animation clip 'AnimSD@Ridehorse'\n\tFrom animation clip 'AnimSD@Ridehorse'\n\tFrom
     animation clip 'AnimSD@Ridehorse'\n\tFrom animation clip 'AnimSD@Ridehorse'\n\tand
-    more ..."
+    more ...\nBinding warning: Some generic clip(s) animate transforms that are already
+    bound by a Humanoid avatar. These transforms can only be changed by Humanoid clips.\n\tTransform
+    'Knee_R'\n\tTransform 'Ankle_L'\n\tTransform 'Ankle_R'\n\tTransform 'Hip_R'\n\tTransform
+    'Hip_L'\n\tTransform 'Knee_L'\n\tTransform 'Root_M'\n\tTransform 'Knee_R'\n\tTransform
+    'Ankle_L'\n\tTransform 'Toes_L'\n\tand more ...\n\tFrom animation clip 'AnimSD@Ridehorse'\n\tFrom
+    animation clip 'AnimSD@Ridehorse'\n\tFrom animation clip 'AnimSD@Ridehorse'\n\tFrom
+    animation clip 'AnimSD@Ridehorse'\n\tFrom animation clip 'AnimSD@Ridehorse'\n\tFrom
+    animation clip 'AnimSD@Ridehorse'\n\tFrom animation clip 'AnimSD@Ridehorse'\n\tFrom
+    animation clip 'AnimSD@Ridehorse'\n\tFrom animation clip 'AnimSD@Ridehorse'\n\tFrom
+    animation clip 'AnimSD@Ridehorse'\n\tand more ...\nBinding warning: Some generic
+    clip(s) animate transforms that are already bound by a Humanoid avatar. These
+    transforms can only be changed by Humanoid clips.\n\tTransform 'Knee_R'\n\tTransform
+    'Ankle_L'\n\tTransform 'Ankle_R'\n\tTransform 'Hip_R'\n\tTransform 'Hip_L'\n\tTransform
+    'Knee_L'\n\tTransform 'Root_M'\n\tTransform 'Knee_R'\n\tTransform 'Ankle_L'\n\tTransform
+    'Toes_L'\n\tand more ...\n\tFrom animation clip 'AnimSD@Ridehorse'\n\tFrom animation
+    clip 'AnimSD@Ridehorse'\n\tFrom animation clip 'AnimSD@Ridehorse'\n\tFrom animation
+    clip 'AnimSD@Ridehorse'\n\tFrom animation clip 'AnimSD@Ridehorse'\n\tFrom animation
+    clip 'AnimSD@Ridehorse'\n\tFrom animation clip 'AnimSD@Ridehorse'\n\tFrom animation
+    clip 'AnimSD@Ridehorse'\n\tFrom animation clip 'AnimSD@Ridehorse'\n\tFrom animation
+    clip 'AnimSD@Ridehorse'\n\tand more ...\nBinding warning: Some generic clip(s)
+    animate transforms that are already bound by a Humanoid avatar. These transforms
+    can only be changed by Humanoid clips.\n\tTransform 'Knee_R'\n\tTransform 'Ankle_L'\n\tTransform
+    'Ankle_R'\n\tTransform 'Hip_R'\n\tTransform 'Hip_L'\n\tTransform 'Knee_L'\n\tTransform
+    'Root_M'\n\tTransform 'Knee_R'\n\tTransform 'Ankle_L'\n\tTransform 'Toes_L'\n\tand
+    more ...\n\tFrom animation clip 'AnimSD@Ridehorse'\n\tFrom animation clip 'AnimSD@Ridehorse'\n\tFrom
+    animation clip 'AnimSD@Ridehorse'\n\tFrom animation clip 'AnimSD@Ridehorse'\n\tFrom
+    animation clip 'AnimSD@Ridehorse'\n\tFrom animation clip 'AnimSD@Ridehorse'\n\tFrom
+    animation clip 'AnimSD@Ridehorse'\n\tFrom animation clip 'AnimSD@Ridehorse'\n\tFrom
+    animation clip 'AnimSD@Ridehorse'\n\tFrom animation clip 'AnimSD@Ridehorse'\n\tand
+    more ...\nBinding warning: Some generic clip(s) animate transforms that are already
+    bound by a Humanoid avatar. These transforms can only be changed by Humanoid clips.\n\tTransform
+    'Knee_R'\n\tTransform 'Ankle_L'\n\tTransform 'Ankle_R'\n\tTransform 'Hip_R'\n\tTransform
+    'Hip_L'\n\tTransform 'Knee_L'\n\tTransform 'Root_M'\n\tTransform 'Knee_R'\n\tTransform
+    'Ankle_L'\n\tTransform 'Toes_L'\n\tand more ...\n\tFrom animation clip 'AnimSD@Ridehorse'\n\tFrom
+    animation clip 'AnimSD@Ridehorse'\n\tFrom animation clip 'AnimSD@Ridehorse'\n\tFrom
+    animation clip 'AnimSD@Ridehorse'\n\tFrom animation clip 'AnimSD@Ridehorse'\n\tFrom
+    animation clip 'AnimSD@Ridehorse'\n\tFrom animation clip 'AnimSD@Ridehorse'\n\tFrom
+    animation clip 'AnimSD@Ridehorse'\n\tFrom animation clip 'AnimSD@Ridehorse'\n\tFrom
+    animation clip 'AnimSD@Ridehorse'\n\tand more ...\nBinding warning: Some generic
+    clip(s) animate transforms that are already bound by a Humanoid avatar. These
+    transforms can only be changed by Humanoid clips.\n\tTransform 'Knee_R'\n\tTransform
+    'Ankle_L'\n\tTransform 'Ankle_R'\n\tTransform 'Hip_R'\n\tTransform 'Hip_L'\n\tTransform
+    'Knee_L'\n\tTransform 'Root_M'\n\tTransform 'Knee_R'\n\tTransform 'Ankle_L'\n\tTransform
+    'Toes_L'\n\tand more ...\n\tFrom animation clip 'AnimSD@Ridehorse'\n\tFrom animation
+    clip 'AnimSD@Ridehorse'\n\tFrom animation clip 'AnimSD@Ridehorse'\n\tFrom animation
+    clip 'AnimSD@Ridehorse'\n\tFrom animation clip 'AnimSD@Ridehorse'\n\tFrom animation
+    clip 'AnimSD@Ridehorse'\n\tFrom animation clip 'AnimSD@Ridehorse'\n\tFrom animation
+    clip 'AnimSD@Ridehorse'\n\tFrom animation clip 'AnimSD@Ridehorse'\n\tFrom animation
+    clip 'AnimSD@Ridehorse'\n\tand more ...\nBinding warning: Some generic clip(s)
+    animate transforms that are already bound by a Humanoid avatar. These transforms
+    can only be changed by Humanoid clips.\n\tTransform 'Knee_R'\n\tTransform 'Ankle_L'\n\tTransform
+    'Ankle_R'\n\tTransform 'Hip_R'\n\tTransform 'Hip_L'\n\tTransform 'Knee_L'\n\tTransform
+    'Root_M'\n\tTransform 'Knee_R'\n\tTransform 'Ankle_L'\n\tTransform 'Toes_L'\n\tand
+    more ...\n\tFrom animation clip 'AnimSD@Ridehorse'\n\tFrom animation clip 'AnimSD@Ridehorse'\n\tFrom
+    animation clip 'AnimSD@Ridehorse'\n\tFrom animation clip 'AnimSD@Ridehorse'\n\tFrom
+    animation clip 'AnimSD@Ridehorse'\n\tFrom animation clip 'AnimSD@Ridehorse'\n\tFrom
+    animation clip 'AnimSD@Ridehorse'\n\tFrom animation clip 'AnimSD@Ridehorse'\n\tFrom
+    animation clip 'AnimSD@Ridehorse'\n\tFrom animation clip 'AnimSD@Ridehorse'\n\tand
+    more ...\nBinding warning: Some generic clip(s) animate transforms that are already
+    bound by a Humanoid avatar. These transforms can only be changed by Humanoid clips.\n\tTransform
+    'Knee_R'\n\tTransform 'Ankle_L'\n\tTransform 'Ankle_R'\n\tTransform 'Hip_R'\n\tTransform
+    'Hip_L'\n\tTransform 'Knee_L'\n\tTransform 'Root_M'\n\tTransform 'Knee_R'\n\tTransform
+    'Ankle_L'\n\tTransform 'Toes_L'\n\tand more ...\n\tFrom animation clip 'AnimSD@Ridehorse'\n\tFrom
+    animation clip 'AnimSD@Ridehorse'\n\tFrom animation clip 'AnimSD@Ridehorse'\n\tFrom
+    animation clip 'AnimSD@Ridehorse'\n\tFrom animation clip 'AnimSD@Ridehorse'\n\tFrom
+    animation clip 'AnimSD@Ridehorse'\n\tFrom animation clip 'AnimSD@Ridehorse'\n\tFrom
+    animation clip 'AnimSD@Ridehorse'\n\tFrom animation clip 'AnimSD@Ridehorse'\n\tFrom
+    animation clip 'AnimSD@Ridehorse'\n\tand more ...\nBinding warning: Some generic
+    clip(s) animate transforms that are already bound by a Humanoid avatar. These
+    transforms can only be changed by Humanoid clips.\n\tTransform 'Knee_R'\n\tTransform
+    'Ankle_L'\n\tTransform 'Ankle_R'\n\tTransform 'Hip_R'\n\tTransform 'Hip_L'\n\tTransform
+    'Knee_L'\n\tTransform 'Root_M'\n\tTransform 'Knee_R'\n\tTransform 'Ankle_L'\n\tTransform
+    'Toes_L'\n\tand more ...\n\tFrom animation clip 'AnimSD@Ridehorse'\n\tFrom animation
+    clip 'AnimSD@Ridehorse'\n\tFrom animation clip 'AnimSD@Ridehorse'\n\tFrom animation
+    clip 'AnimSD@Ridehorse'\n\tFrom animation clip 'AnimSD@Ridehorse'\n\tFrom animation
+    clip 'AnimSD@Ridehorse'\n\tFrom animation clip 'AnimSD@Ridehorse'\n\tFrom animation
+    clip 'AnimSD@Ridehorse'\n\tFrom animation clip 'AnimSD@Ridehorse'\n\tFrom animation
+    clip 'AnimSD@Ridehorse'\n\tand more ...\nBinding warning: Some generic clip(s)
+    animate transforms that are already bound by a Humanoid avatar. These transforms
+    can only be changed by Humanoid clips.\n\tTransform 'Knee_R'\n\tTransform 'Ankle_L'\n\tTransform
+    'Ankle_R'\n\tTransform 'Hip_R'\n\tTransform 'Hip_L'\n\tTransform 'Knee_L'\n\tTransform
+    'Root_M'\n\tTransform 'Knee_R'\n\tTransform 'Ankle_L'\n\tTransform 'Toes_L'\n\tand
+    more ...\n\tFrom animation clip 'AnimSD@Ridehorse'\n\tFrom animation clip 'AnimSD@Ridehorse'\n\tFrom
+    animation clip 'AnimSD@Ridehorse'\n\tFrom animation clip 'AnimSD@Ridehorse'\n\tFrom
+    animation clip 'AnimSD@Ridehorse'\n\tFrom animation clip 'AnimSD@Ridehorse'\n\tFrom
+    animation clip 'AnimSD@Ridehorse'\n\tFrom animation clip 'AnimSD@Ridehorse'\n\tFrom
+    animation clip 'AnimSD@Ridehorse'\n\tFrom animation clip 'AnimSD@Ridehorse'\n\tand
+    more ...\nBinding warning: Some generic clip(s) animate transforms that are already
+    bound by a Humanoid avatar. These transforms can only be changed by Humanoid clips.\n\tTransform
+    'Knee_R'\n\tTransform 'Ankle_L'\n\tTransform 'Ankle_R'\n\tTransform 'Hip_R'\n\tTransform
+    'Hip_L'\n\tTransform 'Knee_L'\n\tTransform 'Root_M'\n\tTransform 'Knee_R'\n\tTransform
+    'Ankle_L'\n\tTransform 'Toes_L'\n\tand more ...\n\tFrom animation clip 'AnimSD@Ridehorse'\n\tFrom
+    animation clip 'AnimSD@Ridehorse'\n\tFrom animation clip 'AnimSD@Ridehorse'\n\tFrom
+    animation clip 'AnimSD@Ridehorse'\n\tFrom animation clip 'AnimSD@Ridehorse'\n\tFrom
+    animation clip 'AnimSD@Ridehorse'\n\tFrom animation clip 'AnimSD@Ridehorse'\n\tFrom
+    animation clip 'AnimSD@Ridehorse'\n\tFrom animation clip 'AnimSD@Ridehorse'\n\tFrom
+    animation clip 'AnimSD@Ridehorse'\n\tand more ...\nBinding warning: Some generic
+    clip(s) animate transforms that are already bound by a Humanoid avatar. These
+    transforms can only be changed by Humanoid clips.\n\tTransform 'Knee_R'\n\tTransform
+    'Ankle_L'\n\tTransform 'Ankle_R'\n\tTransform 'Hip_R'\n\tTransform 'Hip_L'\n\tTransform
+    'Knee_L'\n\tTransform 'Root_M'\n\tTransform 'Knee_R'\n\tTransform 'Ankle_L'\n\tTransform
+    'Toes_L'\n\tand more ...\n\tFrom animation clip 'AnimSD@Ridehorse'\n\tFrom animation
+    clip 'AnimSD@Ridehorse'\n\tFrom animation clip 'AnimSD@Ridehorse'\n\tFrom animation
+    clip 'AnimSD@Ridehorse'\n\tFrom animation clip 'AnimSD@Ridehorse'\n\tFrom animation
+    clip 'AnimSD@Ridehorse'\n\tFrom animation clip 'AnimSD@Ridehorse'\n\tFrom animation
+    clip 'AnimSD@Ridehorse'\n\tFrom animation clip 'AnimSD@Ridehorse'\n\tFrom animation
+    clip 'AnimSD@Ridehorse'\n\tand more ...\nBinding warning: Some generic clip(s)
+    animate transforms that are already bound by a Humanoid avatar. These transforms
+    can only be changed by Humanoid clips.\n\tTransform 'Knee_R'\n\tTransform 'Ankle_L'\n\tTransform
+    'Ankle_R'\n\tTransform 'Hip_R'\n\tTransform 'Hip_L'\n\tTransform 'Knee_L'\n\tTransform
+    'Root_M'\n\tTransform 'Knee_R'\n\tTransform 'Ankle_L'\n\tTransform 'Toes_L'\n\tand
+    more ...\n\tFrom animation clip 'AnimSD@Ridehorse'\n\tFrom animation clip 'AnimSD@Ridehorse'\n\tFrom
+    animation clip 'AnimSD@Ridehorse'\n\tFrom animation clip 'AnimSD@Ridehorse'\n\tFrom
+    animation clip 'AnimSD@Ridehorse'\n\tFrom animation clip 'AnimSD@Ridehorse'\n\tFrom
+    animation clip 'AnimSD@Ridehorse'\n\tFrom animation clip 'AnimSD@Ridehorse'\n\tFrom
+    animation clip 'AnimSD@Ridehorse'\n\tFrom animation clip 'AnimSD@Ridehorse'\n\tand
+    more ...\nBinding warning: Some generic clip(s) animate transforms that are already
+    bound by a Humanoid avatar. These transforms can only be changed by Humanoid clips.\n\tTransform
+    'Knee_R'\n\tTransform 'Ankle_L'\n\tTransform 'Ankle_R'\n\tTransform 'Hip_R'\n\tTransform
+    'Hip_L'\n\tTransform 'Knee_L'\n\tTransform 'Root_M'\n\tTransform 'Knee_R'\n\tTransform
+    'Ankle_L'\n\tTransform 'Toes_L'\n\tand more ...\n\tFrom animation clip 'AnimSD@Ridehorse'\n\tFrom
+    animation clip 'AnimSD@Ridehorse'\n\tFrom animation clip 'AnimSD@Ridehorse'\n\tFrom
+    animation clip 'AnimSD@Ridehorse'\n\tFrom animation clip 'AnimSD@Ridehorse'\n\tFrom
+    animation clip 'AnimSD@Ridehorse'\n\tFrom animation clip 'AnimSD@Ridehorse'\n\tFrom
+    animation clip 'AnimSD@Ridehorse'\n\tFrom animation clip 'AnimSD@Ridehorse'\n\tFrom
+    animation clip 'AnimSD@Ridehorse'\n\tand more ...\nBinding warning: Some generic
+    clip(s) animate transforms that are already bound by a Humanoid avatar. These
+    transforms can only be changed by Humanoid clips.\n\tTransform 'Knee_R'\n\tTransform
+    'Ankle_L'\n\tTransform 'Ankle_R'\n\tTransform 'Hip_R'\n\tTransform 'Hip_L'\n\tTransform
+    'Knee_L'\n\tTransform 'Root_M'\n\tTransform 'Knee_R'\n\tTransform 'Ankle_L'\n\tTransform
+    'Toes_L'\n\tand more ...\n\tFrom animation clip 'AnimSD@Ridehorse'\n\tFrom animation
+    clip 'AnimSD@Ridehorse'\n\tFrom animation clip 'AnimSD@Ridehorse'\n\tFrom animation
+    clip 'AnimSD@Ridehorse'\n\tFrom animation clip 'AnimSD@Ridehorse'\n\tFrom animation
+    clip 'AnimSD@Ridehorse'\n\tFrom animation clip 'AnimSD@Ridehorse'\n\tFrom animation
+    clip 'AnimSD@Ridehorse'\n\tFrom animation clip 'AnimSD@Ridehorse'\n\tFrom animation
+    clip 'AnimSD@Ridehorse'\n\tand more ...\nBinding warning: Some generic clip(s)
+    animate transforms that are already bound by a Humanoid avatar. These transforms
+    can only be changed by Humanoid clips.\n\tTransform 'Knee_R'\n\tTransform 'Ankle_L'\n\tTransform
+    'Ankle_R'\n\tTransform 'Hip_R'\n\tTransform 'Hip_L'\n\tTransform 'Knee_L'\n\tTransform
+    'Root_M'\n\tTransform 'Knee_R'\n\tTransform 'Ankle_L'\n\tTransform 'Toes_L'\n\tand
+    more ...\n\tFrom animation clip 'AnimSD@Ridehorse'\n\tFrom animation clip 'AnimSD@Ridehorse'\n\tFrom
+    animation clip 'AnimSD@Ridehorse'\n\tFrom animation clip 'AnimSD@Ridehorse'\n\tFrom
+    animation clip 'AnimSD@Ridehorse'\n\tFrom animation clip 'AnimSD@Ridehorse'\n\tFrom
+    animation clip 'AnimSD@Ridehorse'\n\tFrom animation clip 'AnimSD@Ridehorse'\n\tFrom
+    animation clip 'AnimSD@Ridehorse'\n\tFrom animation clip 'AnimSD@Ridehorse'\n\tand
+    more ...\nBinding warning: Some generic clip(s) animate transforms that are already
+    bound by a Humanoid avatar. These transforms can only be changed by Humanoid clips.\n\tTransform
+    'Knee_R'\n\tTransform 'Ankle_L'\n\tTransform 'Ankle_R'\n\tTransform 'Hip_R'\n\tTransform
+    'Hip_L'\n\tTransform 'Knee_L'\n\tTransform 'Root_M'\n\tTransform 'Knee_R'\n\tTransform
+    'Ankle_L'\n\tTransform 'Toes_L'\n\tand more ...\n\tFrom animation clip 'AnimSD@Ridehorse'\n\tFrom
+    animation clip 'AnimSD@Ridehorse'\n\tFrom animation clip 'AnimSD@Ridehorse'\n\tFrom
+    animation clip 'AnimSD@Ridehorse'\n\tFrom animation clip 'AnimSD@Ridehorse'\n\tFrom
+    animation clip 'AnimSD@Ridehorse'\n\tFrom animation clip 'AnimSD@Ridehorse'\n\tFrom
+    animation clip 'AnimSD@Ridehorse'\n\tFrom animation clip 'AnimSD@Ridehorse'\n\tFrom
+    animation clip 'AnimSD@Ridehorse'\n\tand more ...\nBinding warning: Some generic
+    clip(s) animate transforms that are already bound by a Humanoid avatar. These
+    transforms can only be changed by Humanoid clips.\n\tTransform 'Knee_R'\n\tTransform
+    'Ankle_L'\n\tTransform 'Ankle_R'\n\tTransform 'Hip_R'\n\tTransform 'Hip_L'\n\tTransform
+    'Knee_L'\n\tTransform 'Root_M'\n\tTransform 'Knee_R'\n\tTransform 'Ankle_L'\n\tTransform
+    'Toes_L'\n\tand more ...\n\tFrom animation clip 'AnimSD@Ridehorse'\n\tFrom animation
+    clip 'AnimSD@Ridehorse'\n\tFrom animation clip 'AnimSD@Ridehorse'\n\tFrom animation
+    clip 'AnimSD@Ridehorse'\n\tFrom animation clip 'AnimSD@Ridehorse'\n\tFrom animation
+    clip 'AnimSD@Ridehorse'\n\tFrom animation clip 'AnimSD@Ridehorse'\n\tFrom animation
+    clip 'AnimSD@Ridehorse'\n\tFrom animation clip 'AnimSD@Ridehorse'\n\tFrom animation
+    clip 'AnimSD@Ridehorse'\n\tand more ..."
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
@@ -3194,13 +3422,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   hiddingObjects:
   - {fileID: 1992973201746340}
+  hiddingRenderers: []
   effectContainers:
   - effectSocket: Floor
     transform: {fileID: 4423592954269084}
   - effectSocket: Body
     transform: {fileID: 4850134687994540}
   setEffectContainersBySetters: 0
-  modelManager: {fileID: 114459446951564280}
   equipmentContainers:
   - equipSocket: Head
     defaultModel: {fileID: 1538773673882184}
@@ -4408,10 +4636,30 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   mainModel: {fileID: 114187856413965758}
+  fpsModelPrefab: {fileID: 0}
   vehicleModels:
   - vehicleType: {fileID: 11400000, guid: fcb88c1dd0644824ab247cfbc3811252, type: 2}
     modelsForEachSeats:
     - {fileID: 114277217483939612}
+--- !u!114 &114745390288779626
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1871756109946672}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8953d40390a5d484384e6c419f5eb119, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  animator: {fileID: 0}
+  axis: 2
+  pitchBone: 8
+  rotateOffset: {x: 0, y: 0, z: -8}
+  inversePitch: 1
+  lerpDamping: 25
+  maxAngle: 0
 --- !u!1 &1884592418975232
 GameObject:
   m_ObjectHideFlags: 0

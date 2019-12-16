@@ -1,5 +1,5 @@
 sceneSetups:
-- path: Assets/UnityMultiplayerARPG/DemoShooter/Scenes/00Init_Shooter.unity
+- path: Assets/Environment/Maps/Valwyn001.unity
   isLoaded: 1
   isActive: 1
   isSubScene: 0

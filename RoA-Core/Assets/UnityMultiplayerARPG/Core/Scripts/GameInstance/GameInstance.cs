@@ -73,9 +73,13 @@ namespace MultiplayerARPG
         [Tooltip("Default damage element, will be used when attacks to enemies or receives damages from enemies")]
         [SerializeField]
         private DamageElement defaultDamageElement;
-        [Tooltip("Default hit effect, will be used when attacks to enemies or receives damages from enemies")]
+        [HideInInspector]
         [SerializeField]
+        [System.Obsolete("`GameEffectCollection` is deprecated and will be removed in future version")]
         private GameEffectCollection defaultHitEffects;
+        [Tooltip("Default hit effects, will be used when attack to enemies or receive damages from enemies")]
+        [SerializeField]
+        private GameEffect[] defaultDamageHitEffects;
         [SerializeField]
         private int[] expTree;
         [Tooltip("You can add game data here or leave this empty to let it load data from Resources folders")]
@@ -137,8 +141,6 @@ namespace MultiplayerARPG
         public float minSummonDistance = 2f;
         [Tooltip("This is a distance that random summon around a character")]
         public float maxSummonDistance = 3f;
-        [Tooltip("Distance to warn character that ally being attacked")]
-        public float enemySpottedNotifyDistance = 5f;
         [Tooltip("Min distance to follow summoner")]
         public float minFollowSummonerDistance = 5f;
         [Tooltip("Max distance to follow summoner, if distance between characters more than this it will teleport to summoner")]
@@ -337,15 +339,19 @@ namespace MultiplayerARPG
                     defaultDamageElement = ScriptableObject.CreateInstance<DamageElement>();
                     defaultDamageElement.name = GameDataConst.DEFAULT_DAMAGE_ID;
                     defaultDamageElement.title = GameDataConst.DEFAULT_DAMAGE_TITLE;
-                    defaultDamageElement.hitEffects = DefaultHitEffects;
+                    defaultDamageElement.damageHitEffects = DefaultDamageHitEffects;
                 }
                 return defaultDamageElement;
             }
         }
 
-        public GameEffectCollection DefaultHitEffects
+        public GameEffect[] DefaultDamageHitEffects
         {
-            get { return defaultHitEffects; }
+            get
+            {
+                ValidateDamageHitEffects();
+                return defaultDamageHitEffects;
+            }
         }
 
         public SocialSystemSetting SocialSystemSetting
@@ -422,6 +428,27 @@ namespace MultiplayerARPG
         protected virtual void Start()
         {
             GameDatabase.LoadData(this);
+        }
+
+        private void OnValidate()
+        {
+#if UNITY_EDITOR
+            if (ValidateDamageHitEffects())
+                UnityEditor.EditorUtility.SetDirty(this);
+#endif
+        }
+
+        private bool ValidateDamageHitEffects()
+        {
+            // This function will be removed in future version
+            if (defaultHitEffects.effects != null && defaultHitEffects.effects.Length > 0)
+            {
+                if (defaultDamageHitEffects == null || defaultDamageHitEffects.Length == 0)
+                    defaultDamageHitEffects = defaultHitEffects.effects;
+                defaultHitEffects.effects = null;
+                return true;
+            }
+            return false;
         }
 
         public void LoadedGameData()

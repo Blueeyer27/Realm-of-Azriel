@@ -25,11 +25,11 @@ namespace MultiplayerARPG
             Toggle,
         }
 
+        [Header("Type")]
         public SkillType skillType;
 
         [Header("Attack")]
         public SkillAttackType skillAttackType;
-        public GameEffectCollection hitEffects;
         public DamageInfo damageInfo;
         public DamageIncremental damageAmount;
         public DamageEffectivenessAttribute[] effectivenessAttributes;
@@ -68,7 +68,8 @@ namespace MultiplayerARPG
 
         public override bool Validate()
         {
-            return GameDataMigration.MigrateBuffArmor(buff, out buff) ||
+            return base.Validate() ||
+                GameDataMigration.MigrateBuffArmor(buff, out buff) ||
                 GameDataMigration.MigrateBuffArmor(debuff, out debuff);
         }
 
@@ -133,35 +134,35 @@ namespace MultiplayerARPG
             switch (skillBuffType)
             {
                 case SkillBuffType.BuffToUser:
-                    skillUser.ApplyBuff(DataId, BuffType.SkillBuff, skillLevel);
+                    skillUser.ApplyBuff(DataId, BuffType.SkillBuff, skillLevel, skillUser);
                     break;
                 case SkillBuffType.BuffToNearbyAllies:
                     tempCharacters = skillUser.FindAliveCharacters<BaseCharacterEntity>(buffDistance.GetAmount(skillLevel), true, false, false);
                     foreach (BaseCharacterEntity applyBuffCharacter in tempCharacters)
                     {
-                        applyBuffCharacter.ApplyBuff(DataId, BuffType.SkillBuff, skillLevel);
+                        applyBuffCharacter.ApplyBuff(DataId, BuffType.SkillBuff, skillLevel, skillUser);
                     }
-                    skillUser.ApplyBuff(DataId, BuffType.SkillBuff, skillLevel);
+                    skillUser.ApplyBuff(DataId, BuffType.SkillBuff, skillLevel, skillUser);
                     break;
                 case SkillBuffType.BuffToNearbyCharacters:
                     tempCharacters = skillUser.FindAliveCharacters<BaseCharacterEntity>(buffDistance.GetAmount(skillLevel), true, false, true);
                     foreach (BaseCharacterEntity applyBuffCharacter in tempCharacters)
                     {
-                        applyBuffCharacter.ApplyBuff(DataId, BuffType.SkillBuff, skillLevel);
+                        applyBuffCharacter.ApplyBuff(DataId, BuffType.SkillBuff, skillLevel, skillUser);
                     }
-                    skillUser.ApplyBuff(DataId, BuffType.SkillBuff, skillLevel);
+                    skillUser.ApplyBuff(DataId, BuffType.SkillBuff, skillLevel, skillUser);
                     break;
                 case SkillBuffType.BuffToTarget:
                     BaseCharacterEntity targetEntity;
                     if (skillUser.TryGetTargetEntity(out targetEntity) && !targetEntity.IsDead())
-                        targetEntity.ApplyBuff(DataId, BuffType.SkillBuff, skillLevel);
+                        targetEntity.ApplyBuff(DataId, BuffType.SkillBuff, skillLevel, skillUser);
                     break;
                 case SkillBuffType.Toggle:
                     int indexOfBuff = skillUser.IndexOfBuff(DataId, BuffType.SkillBuff);
                     if (indexOfBuff >= 0)
                         skillUser.Buffs.RemoveAt(indexOfBuff);
                     else
-                        skillUser.ApplyBuff(DataId, BuffType.SkillBuff, skillLevel);
+                        skillUser.ApplyBuff(DataId, BuffType.SkillBuff, skillLevel, skillUser);
                     break;
             }
         }
@@ -293,41 +294,36 @@ namespace MultiplayerARPG
             return GameDataHelpers.GetEffectivenessDamage(CacheEffectivenessAttributes, skillUser);
         }
 
-        public override sealed Buff GetBuff()
+        public override Buff GetBuff()
         {
             if (!IsBuff())
                 return new Buff();
             return buff;
         }
 
-        public override sealed Buff GetDebuff()
+        public override Buff GetDebuff()
         {
             if (!IsDebuff())
                 return new Buff();
             return debuff;
         }
 
-        public override sealed SkillSummon GetSummon()
+        public override SkillSummon GetSummon()
         {
             return summon;
         }
 
-        public override sealed SkillMount GetMount()
+        public override SkillMount GetMount()
         {
             return mount;
         }
 
-        public override sealed ItemCraft GetItemCraft()
+        public override ItemCraft GetItemCraft()
         {
             return itemCraft;
         }
 
-        public override sealed GameEffectCollection GetHitEffect()
-        {
-            return hitEffects;
-        }
-
-        public override sealed bool RequiredTarget()
+        public override bool RequiredTarget()
         {
             return skillBuffType == SkillBuffType.BuffToTarget;
         }

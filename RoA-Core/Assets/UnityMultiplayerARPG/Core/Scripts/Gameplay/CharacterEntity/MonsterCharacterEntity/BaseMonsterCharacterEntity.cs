@@ -215,27 +215,31 @@ namespace MultiplayerARPG
             return characterEntity is BasePlayerCharacterEntity;
         }
 
-        public override void ReceiveDamage(IAttackerEntity attacker, CharacterItem weapon, Dictionary<DamageElement, MinMaxFloat> damageAmounts, BaseSkill skill, short skillLevel)
+        public override void ReceiveDamage(IGameEntity attacker, CharacterItem weapon, Dictionary<DamageElement, MinMaxFloat> damageAmounts, BaseSkill skill, short skillLevel)
         {
             if (!IsServer || IsDead() || !CanReceiveDamageFrom(attacker))
                 return;
 
             base.ReceiveDamage(attacker, weapon, damageAmounts, skill, skillLevel);
-            BaseCharacterEntity attackerCharacter = attacker as BaseCharacterEntity;
 
-            // If character is not dead, try to attack
-            if (!IsDead())
+            if (attacker != null && attacker.Entity is BaseCharacterEntity)
             {
-                BaseCharacterEntity targetEntity;
-                if (!TryGetTargetEntity(out targetEntity))
+                BaseCharacterEntity attackerCharacter = attacker.Entity as BaseCharacterEntity;
+
+                // If character is not dead, try to attack
+                if (!IsDead())
                 {
-                    // If no target enemy, set target enemy as attacker
-                    SetAttackTarget(attackerCharacter);
-                }
-                else if (attackerCharacter != targetEntity && Random.value > 0.5f)
-                {
-                    // Random 50% to change target when receive damage from anyone
-                    SetAttackTarget(attackerCharacter);
+                    BaseCharacterEntity targetEntity;
+                    if (!TryGetTargetEntity(out targetEntity))
+                    {
+                        // If no target enemy, set target enemy as attacker
+                        SetAttackTarget(attackerCharacter);
+                    }
+                    else if (attackerCharacter != targetEntity && Random.value > 0.5f)
+                    {
+                        // Random 50% to change target when receive damage from anyone
+                        SetAttackTarget(attackerCharacter);
+                    }
                 }
             }
         }
@@ -303,34 +307,37 @@ namespace MultiplayerARPG
             return MonsterDatabase.damageInfo.GetFov();
         }
 
-        public override void ReceivedDamage(IAttackerEntity attacker, CombatAmountType damageAmountType, int damage)
+        public override void ReceivedDamage(IGameEntity attacker, CombatAmountType damageAmountType, int damage)
         {
-            BaseCharacterEntity attackerCharacterEntity = attacker as BaseCharacterEntity;
-
-            // If summoned by someone, summoner is attacker
-            if (attackerCharacterEntity != null &&
-                attackerCharacterEntity is BaseMonsterCharacterEntity &&
-                (attackerCharacterEntity as BaseMonsterCharacterEntity).IsSummoned)
-                attackerCharacterEntity = (attackerCharacterEntity as BaseMonsterCharacterEntity).Summoner;
-
-            // Add received damage entry
-            if (attackerCharacterEntity != null)
+            // Attacker can be null when character buff's buff applier is null, So avoid it
+            if (attacker != null)
             {
-                ReceivedDamageRecord receivedDamageRecord = new ReceivedDamageRecord();
-                receivedDamageRecord.totalReceivedDamage = damage;
-                if (receivedDamageRecords.ContainsKey(attackerCharacterEntity))
-                {
-                    receivedDamageRecord = receivedDamageRecords[attackerCharacterEntity];
-                    receivedDamageRecord.totalReceivedDamage += damage;
-                }
-                receivedDamageRecord.lastReceivedDamageTime = Time.unscaledTime;
-                receivedDamageRecords[attackerCharacterEntity] = receivedDamageRecord;
-            }
+                BaseCharacterEntity attackerCharacter = attacker.Entity as BaseCharacterEntity;
 
-            base.ReceivedDamage(attackerCharacterEntity, damageAmountType, damage);
+                // If summoned by someone, summoner is attacker
+                if (attackerCharacter != null &&
+                    attackerCharacter is BaseMonsterCharacterEntity &&
+                    (attackerCharacter as BaseMonsterCharacterEntity).IsSummoned)
+                    attackerCharacter = (attackerCharacter as BaseMonsterCharacterEntity).Summoner;
+
+                // Add received damage entry
+                if (attackerCharacter != null)
+                {
+                    ReceivedDamageRecord receivedDamageRecord = new ReceivedDamageRecord();
+                    receivedDamageRecord.totalReceivedDamage = damage;
+                    if (receivedDamageRecords.ContainsKey(attackerCharacter))
+                    {
+                        receivedDamageRecord = receivedDamageRecords[attackerCharacter];
+                        receivedDamageRecord.totalReceivedDamage += damage;
+                    }
+                    receivedDamageRecord.lastReceivedDamageTime = Time.unscaledTime;
+                    receivedDamageRecords[attackerCharacter] = receivedDamageRecord;
+                }
+            }
+            base.ReceivedDamage(attacker, damageAmountType, damage);
         }
 
-        public override sealed void Killed(BaseCharacterEntity lastAttacker)
+        public override sealed void Killed(IGameEntity lastAttacker)
         {
             base.Killed(lastAttacker);
 
@@ -339,13 +346,29 @@ namespace MultiplayerARPG
                 return;
 
             Reward reward = gameplayRule.MakeMonsterReward(MonsterDatabase);
-            BasePlayerCharacterEntity lastPlayer = null;
-            if (lastAttacker != null)
-                lastPlayer = lastAttacker as BasePlayerCharacterEntity;
-            GuildData tempGuildData;
-            PartyData tempPartyData;
+            // Temp data which will be in-use in loop
+            BaseCharacterEntity tempCharacterEntity;
             BasePlayerCharacterEntity tempPlayerCharacterEntity;
             BaseMonsterCharacterEntity tempMonsterCharacterEntity;
+            // Last player is last player who kill the monster
+            // Whom will have permission to pickup an items before other
+            BasePlayerCharacterEntity lastPlayer = null;
+            if (lastAttacker != null)
+            {
+                if (lastAttacker.Entity is BaseMonsterCharacterEntity)
+                {
+                    tempMonsterCharacterEntity = lastAttacker.Entity as BaseMonsterCharacterEntity;
+                    if (tempMonsterCharacterEntity.Summoner != null &&
+                        tempMonsterCharacterEntity.Summoner is BasePlayerCharacterEntity)
+                    {
+                        // Set its summoner as main enemy
+                        lastAttacker = tempMonsterCharacterEntity.Summoner;
+                    }
+                }
+                lastPlayer = lastAttacker.Entity as BasePlayerCharacterEntity;
+            }
+            GuildData tempGuildData;
+            PartyData tempPartyData;
             bool givenRewardExp;
             bool givenRewardCurrency;
             float shareGuildExpRate;
@@ -357,19 +380,31 @@ namespace MultiplayerARPG
                     if (enemy == null)
                         continue;
 
+                    tempCharacterEntity = enemy;
                     givenRewardExp = false;
                     givenRewardCurrency = false;
                     shareGuildExpRate = 0f;
 
-                    ReceivedDamageRecord receivedDamageRecord = receivedDamageRecords[enemy];
+                    ReceivedDamageRecord receivedDamageRecord = receivedDamageRecords[tempCharacterEntity];
                     float rewardRate = (float)receivedDamageRecord.totalReceivedDamage / (float)this.GetCaches().MaxHp;
                     if (rewardRate > 1f)
                         rewardRate = 1f;
 
-                    if (enemy is BasePlayerCharacterEntity)
+                    if (tempCharacterEntity is BaseMonsterCharacterEntity)
+                    {
+                        tempMonsterCharacterEntity = tempCharacterEntity as BaseMonsterCharacterEntity;
+                        if (tempMonsterCharacterEntity.Summoner != null &&
+                            tempMonsterCharacterEntity.Summoner is BasePlayerCharacterEntity)
+                        {
+                            // Set its summoner as main enemy
+                            tempCharacterEntity = tempMonsterCharacterEntity.Summoner;
+                        }
+                    }
+
+                    if (tempCharacterEntity is BasePlayerCharacterEntity)
                     {
                         bool makeMostDamage = false;
-                        tempPlayerCharacterEntity = enemy as BasePlayerCharacterEntity;
+                        tempPlayerCharacterEntity = tempCharacterEntity as BasePlayerCharacterEntity;
                         // Clear looters list when it is found new player character who make most damages
                         if (rewardRate > tempHighRewardRate)
                         {
@@ -535,9 +570,23 @@ namespace MultiplayerARPG
             NetworkDestroy();
         }
 
+        protected override void NotifyEnemySpottedToAllies(BaseCharacterEntity enemy)
+        {
+            if (MonsterDatabase.characteristic != MonsterCharacteristic.Assist)
+                return;
+            // Warn that this character received damage to nearby characters
+            List<BaseCharacterEntity> foundCharacters = FindAliveCharacters<BaseCharacterEntity>(MonsterDatabase.visualRange, true, false, false);
+            if (foundCharacters == null || foundCharacters.Count == 0) return;
+            foreach (BaseCharacterEntity foundCharacter in foundCharacters)
+            {
+                foundCharacter.NotifyEnemySpotted(this, enemy);
+            }
+        }
+
         public override void NotifyEnemySpotted(BaseCharacterEntity ally, BaseCharacterEntity attacker)
         {
-            if ((Summoner != null && Summoner == ally) || MonsterDatabase.characteristic == MonsterCharacteristic.Assist)
+            if ((Summoner != null && Summoner == ally) ||
+                MonsterDatabase.characteristic == MonsterCharacteristic.Assist)
                 SetAttackTarget(attacker);
         }
     }

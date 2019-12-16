@@ -74,13 +74,13 @@ namespace MultiplayerARPG
             if (writeAddonLog) Debug.Log("[" + name + "] MonsterCharacterEntity.OnNetworkDestroy(" + reasons + ")");
         }
 
-        protected void DevExtReceiveDamageDemo(IAttackerEntity attacker, CharacterItem weapon, Dictionary<DamageElement, MinMaxFloat> allDamageAmounts, BaseSkill skill, short skillLevel)
+        protected void DevExtReceiveDamageDemo(IGameEntity attacker, CharacterItem weapon, Dictionary<DamageElement, MinMaxFloat> allDamageAmounts, BaseSkill skill, short skillLevel)
         {
             if (writeAddonLog) Debug.Log("[" + name + "] MonsterCharacterEntity.ReceiveDamage("
                 + attacker.gameObject.name + ", " + weapon + ", " + allDamageAmounts.Count + ", " + (skill != null ? skill.Title : "No Debuff") + ")");
         }
 
-        protected void DevExtReceivedDamageDemo(IAttackerEntity attacker, CombatAmountType combatAmountType, int damage)
+        protected void DevExtReceivedDamageDemo(IGameEntity attacker, CombatAmountType combatAmountType, int damage)
         {
             if (writeAddonLog) Debug.Log("[" + name + "] MonsterCharacterEntity.ReceivedDamage("
                 + attacker.gameObject.name + ", " + combatAmountType + ", " + damage + ")");

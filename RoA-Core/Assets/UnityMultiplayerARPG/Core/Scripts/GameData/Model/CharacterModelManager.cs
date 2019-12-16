@@ -25,6 +25,10 @@ namespace MultiplayerARPG
         }
 
         [SerializeField]
+        private BaseCharacterModel fpsModelPrefab;
+        public BaseCharacterModel FpsModel { get; private set; }
+        
+        [SerializeField]
         private VehicleCharacterModel[] vehicleModels;
 
         private Dictionary<int, VehicleCharacterModel> cacheVehicleModels;
@@ -72,6 +76,11 @@ namespace MultiplayerARPG
             }
         }
 
+        public bool IsFpsMode
+        {
+            get; private set;
+        }
+
         private Dictionary<byte, bool> hideStates = new Dictionary<byte, bool>();
         private int dirtyVehicleDataId;
         private byte dirtySeatIndex;
@@ -79,15 +88,19 @@ namespace MultiplayerARPG
         private void Awake()
         {
             SetupModelManager();
+        }
+
+        private void Start()
+        {
             SwitchModel(MainModel);
         }
 
         private bool SetupModelManager()
         {
             bool hasChanges = false;
-            if (mainModel != null && mainModel.modelManager != this)
+            if (mainModel != null && mainModel.ModelManager != this)
             {
-                mainModel.modelManager = this;
+                mainModel.ModelManager = this;
                 hasChanges = true;
             }
 
@@ -99,9 +112,9 @@ namespace MultiplayerARPG
                     foreach (BaseCharacterModel modelsForEachSeat in vehicleModel.modelsForEachSeats)
                     {
                         if (modelsForEachSeat == null) continue;
-                        if (modelsForEachSeat.modelManager != this)
+                        if (modelsForEachSeat.ModelManager != this)
                         {
-                            modelsForEachSeat.modelManager = this;
+                            modelsForEachSeat.ModelManager = this;
                             hasChanges = true;
                         }
                     }
@@ -167,10 +180,31 @@ namespace MultiplayerARPG
             activeModel.SwitchModel(previousModel);
         }
 
-        public void SetHide(byte setter, bool hideState)
+        public void SetHide(byte setter, bool isHide)
         {
-            hideStates[setter] = hideState;
-            MainModel.SetHide(IsHide);
+            hideStates[setter] = isHide;
+            SetFpsMode(IsFpsMode);
+        }
+
+        public void SetFpsMode(bool isFpsMode)
+        {
+            IsFpsMode = isFpsMode;
+            MainModel.SetHide(IsFpsMode || IsHide);
+            if (FpsModel != null)
+            {
+                // FPS model will hide when it's not fps mode
+                FpsModel.SetHide(!IsFpsMode || IsHide);
+            }
+        }
+
+        public BaseCharacterModel InstantiateFpsModel(Transform container)
+        {
+            if (fpsModelPrefab == null)
+                return null;
+            FpsModel = Instantiate(fpsModelPrefab, container);
+            FpsModel.transform.localPosition = Vector3.zero;
+            FpsModel.transform.localRotation = Quaternion.identity;
+            return FpsModel;
         }
     }
 

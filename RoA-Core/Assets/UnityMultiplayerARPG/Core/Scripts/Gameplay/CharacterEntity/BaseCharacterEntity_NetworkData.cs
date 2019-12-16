@@ -93,7 +93,7 @@ namespace MultiplayerARPG
             }
         }
         public byte EquipWeaponSet { get { return equipWeaponSet.Value; } set { equipWeaponSet.Value = value; } }
-        public float Pitch { get { return pitch.Value * 100f; } set { pitch.Value = (byte)(value * 0.01f); } }
+        public float Pitch { get { return (float)pitch.Value * 0.01f * 360f; } set { pitch.Value = (byte)(value / 360f * 100); } }
 
         public IList<EquipWeapons> SelectableWeaponSets
         {
@@ -289,8 +289,9 @@ namespace MultiplayerARPG
         /// <param name="equipWeaponSet"></param>
         protected virtual void OnEquipWeaponSetChange(bool isInitial, byte equipWeaponSet)
         {
-            if (CharacterModel != null)
-                CharacterModel.SetEquipWeapons(EquipWeapons);
+            CharacterModel.SetEquipWeapons(EquipWeapons);
+            if (FpsModel != null)
+                FpsModel.SetEquipWeapons(EquipWeapons);
 
             if (onEquipWeaponSetChange != null)
                 onEquipWeaponSetChange.Invoke(equipWeaponSet);
@@ -322,8 +323,9 @@ namespace MultiplayerARPG
                 index = index
             };
 
-            if (CharacterModel != null)
-                CharacterModel.SetEquipWeapons(EquipWeapons);
+            CharacterModel.SetEquipWeapons(EquipWeapons);
+            if (FpsModel != null)
+                FpsModel.SetEquipWeapons(EquipWeapons);
         }
 
         /// <summary>
@@ -394,8 +396,9 @@ namespace MultiplayerARPG
         /// <param name="index"></param>
         protected virtual void OnBuffsOperation(LiteNetLibSyncList.Operation operation, int index)
         {
-            if (CharacterModel != null)
-                CharacterModel.SetBuffs(buffs);
+            CharacterModel.SetBuffs(buffs);
+            if (FpsModel != null)
+                FpsModel.SetBuffs(buffs);
 
             buffsRecachingState = new SyncListRecachingState()
             {
@@ -412,8 +415,9 @@ namespace MultiplayerARPG
         /// <param name="index"></param>
         protected virtual void OnEquipItemsOperation(LiteNetLibSyncList.Operation operation, int index)
         {
-            if (CharacterModel != null)
-                CharacterModel.SetEquipItems(equipItems);
+            CharacterModel.SetEquipItems(equipItems);
+            if (FpsModel != null)
+                FpsModel.SetEquipItems(equipItems);
 
             equipItemsRecachingState = new SyncListRecachingState()
             {

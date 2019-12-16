@@ -73,6 +73,8 @@ public class CharacterBuff : INetSerializableWithElement
         set { element = value; }
     }
 
+    public IGameEntity BuffApplier { get; private set; }
+
     private void MakeCache()
     {
         if (dirtyDataId != dataId || dirtyType != type || dirtyLevel != level)
@@ -111,7 +113,7 @@ public class CharacterBuff : INetSerializableWithElement
                     break;
                 case BuffType.GuildSkillBuff:
                     if (GameInstance.GuildSkills.TryGetValue(dataId, out cacheGuildSkill) && cacheGuildSkill != null)
-                        cacheBuff = cacheGuildSkill.buff;
+                        cacheBuff = cacheGuildSkill.GetBuff();
                     break;
             }
             cacheDuration = cacheBuff.GetDuration(level);
@@ -244,8 +246,9 @@ public class CharacterBuff : INetSerializableWithElement
         return buffRemainsDuration <= 0f;
     }
 
-    public void Apply()
+    public void Apply(IGameEntity buffApplier)
     {
+        BuffApplier = buffApplier;
         buffRemainsDuration = GetDuration();
     }
 

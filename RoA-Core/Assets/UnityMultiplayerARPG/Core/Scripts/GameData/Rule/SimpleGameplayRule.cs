@@ -215,8 +215,8 @@ namespace MultiplayerARPG
                 character.MovementState.HasFlag(MovementState.IsSprinting) &&
                 character.CurrentStamina > 0f)
                 moveSpeed *= moveSpeedRateWhileSprint;
-            if (character.isAttackingOrUsingSkill)
-                moveSpeed *= character.moveSpeedRateWhileAttackOrUseSkill;
+            if (character.IsAttackingOrUsingSkill)
+                moveSpeed *= character.MoveSpeedRateWhileAttackOrUseSkill;
             return moveSpeed;
         }
 
@@ -398,7 +398,8 @@ namespace MultiplayerARPG
             float decreaseArmorDurability = normalDecreaseArmorDurability;
             GetDecreaseDurabilityAmount(combatAmountType, out decreaseWeaponDurability, out decreaseShieldDurability, out decreaseArmorDurability);
             // Decrease Weapon Durability
-            DecreaseEquipWeaponsDurability(attacker, decreaseWeaponDurability);
+            if (attacker != null)
+                DecreaseEquipWeaponsDurability(attacker, decreaseWeaponDurability);
             // Decrease Shield Durability
             DecreaseEquipShieldsDurability(damageReceiver, decreaseShieldDurability);
             // Decrease Armor Durability

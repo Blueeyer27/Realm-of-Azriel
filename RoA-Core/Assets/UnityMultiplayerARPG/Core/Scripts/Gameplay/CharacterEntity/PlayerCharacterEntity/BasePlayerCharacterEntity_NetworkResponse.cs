@@ -105,7 +105,7 @@ namespace MultiplayerARPG
                 return;
 
             GuildSkill guildSkill;
-            if (!GameInstance.GuildSkills.TryGetValue(dataId, out guildSkill) || guildSkill.skillType != GuildSkillType.Active)
+            if (!GameInstance.GuildSkills.TryGetValue(dataId, out guildSkill) || guildSkill.GetSkillType() != GuildSkillType.Active)
                 return;
 
             GuildData guild;
@@ -123,7 +123,7 @@ namespace MultiplayerARPG
             CharacterSkillUsage newSkillUsage = CharacterSkillUsage.Create(SkillUsageType.GuildSkill, dataId);
             newSkillUsage.Use(this, level);
             skillUsages.Add(newSkillUsage);
-            ApplyBuff(dataId, BuffType.GuildSkillBuff, level);
+            ApplyBuff(dataId, BuffType.GuildSkillBuff, level, this);
         }
 
         protected void NetFuncRespawn()

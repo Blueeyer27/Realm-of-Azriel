@@ -45,6 +45,7 @@ namespace MultiplayerARPG
         KeyValuePair<CombatAmountType, int> tempCombatTextData;
         private float tempTime;
         private float lastSpawnCombatTextTime;
+        private GameEffect[] pendingHitEffects;
 
         public override void OnSetup()
         {
@@ -74,6 +75,15 @@ namespace MultiplayerARPG
         protected void NetFuncCombatAmount(byte byteCombatAmountType, int amount)
         {
             spawningCombatTexts.Enqueue(new KeyValuePair<CombatAmountType, int>((CombatAmountType)byteCombatAmountType, amount));
+            switch ((CombatAmountType)byteCombatAmountType)
+            {
+                case CombatAmountType.NormalDamage:
+                case CombatAmountType.CriticalDamage:
+                case CombatAmountType.BlockedDamage:
+                    if (Model != null)
+                        Model.InstantiateEffect(pendingHitEffects);
+                    break;
+            }
         }
 
         public virtual void RequestCombatAmount(CombatAmountType combatAmountType, int amount)
@@ -86,7 +96,7 @@ namespace MultiplayerARPG
             return CurrentHp <= 0;
         }
 
-        public virtual void ReceiveDamage(IAttackerEntity attacker, CharacterItem weapon, Dictionary<DamageElement, MinMaxFloat> damageAmounts, BaseSkill skill, short skillLevel)
+        public virtual void ReceiveDamage(IGameEntity attacker, CharacterItem weapon, Dictionary<DamageElement, MinMaxFloat> damageAmounts, BaseSkill skill, short skillLevel)
         {
             if (!IsServer || IsDead())
                 return;
@@ -94,39 +104,38 @@ namespace MultiplayerARPG
                 onReceiveDamage.Invoke(attacker, weapon, damageAmounts, skill, skillLevel);
         }
 
-        public virtual void ReceivedDamage(IAttackerEntity attacker, CombatAmountType combatAmountType, int damage)
+        public virtual void ReceivedDamage(IGameEntity attacker, CombatAmountType combatAmountType, int damage)
         {
             RequestCombatAmount(combatAmountType, damage);
             if (onReceivedDamage != null)
                 onReceivedDamage.Invoke(attacker, combatAmountType, damage);
         }
 
-        public virtual bool CanReceiveDamageFrom(IAttackerEntity attacker)
+        public virtual bool CanReceiveDamageFrom(IGameEntity attacker)
         {
             return true;
         }
 
         public virtual void PlayHitEffects(IEnumerable<DamageElement> damageElements, BaseSkill skill)
         {
-            GameEffect[] effects = gameInstance.DefaultHitEffects.effects;
-            if (skill != null && skill.GetHitEffect().effects != null && skill.GetHitEffect().effects.Length > 0)
+            GameEffect[] effects = gameInstance.DefaultDamageHitEffects;
+            if (skill != null && skill.GetDamageHitEffects() != null && skill.GetDamageHitEffects().Length > 0)
             {
                 // Set hit effects from skill's hit effects
-                effects = skill.GetHitEffect().effects;
+                effects = skill.GetDamageHitEffects();
             }
             else
             {
                 foreach (DamageElement element in damageElements)
                 {
-                    if (element.hitEffects.effects == null ||
-                        element.hitEffects.effects.Length == 0)
+                    if (element.GetDamageHitEffects() == null ||
+                        element.GetDamageHitEffects().Length == 0)
                         continue;
-                    effects = element.hitEffects.effects;
+                    effects = element.GetDamageHitEffects();
                     break;
                 }
             }
-            if (Model != null)
-                Model.InstantiateEffect(effects);
+            pendingHitEffects = effects;
         }
     }
 }

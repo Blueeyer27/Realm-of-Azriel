@@ -101,7 +101,7 @@ namespace MultiplayerARPG
             }
         }
 
-        protected void NetFuncReload(bool isLeftHand)
+        protected virtual void NetFuncReload(bool isLeftHand)
         {
             if (!CanAttack())
                 return;
@@ -129,7 +129,7 @@ namespace MultiplayerARPG
                 return;
 
             // Start reload routine
-            isAttackingOrUsingSkill = true;
+            IsAttackingOrUsingSkill = true;
 
             // Play animations
             RequestPlayReloadAnimation(isLeftHand);
@@ -150,16 +150,18 @@ namespace MultiplayerARPG
                 CharacterModel.GetLeftHandReloadAnimation(reloadingWeaponItem.WeaponType.DataId, out triggerDurations, out totalDuration);
 
             // Set doing action state at clients and server
-            isAttackingOrUsingSkill = true;
+            IsAttackingOrUsingSkill = true;
 
             // Calculate move speed rate while doing action at clients and server
-            moveSpeedRateWhileAttackOrUseSkill = GetMoveSpeedRateWhileAttackOrUseSkill(animActionType, null);
+            MoveSpeedRateWhileAttackOrUseSkill = GetMoveSpeedRateWhileAttackOrUseSkill(animActionType, null);
 
             // Animations will plays on clients only
             if (IsClient)
             {
                 // Play animation
                 CharacterModel.PlayActionAnimation(animActionType, reloadingWeaponItem.WeaponType.DataId, 0);
+                if (FpsModel != null)
+                    FpsModel.PlayActionAnimation(animActionType, reloadingWeaponItem.WeaponType.DataId, 0);
             }
 
             for (int i = 0; i < triggerDurations.Length; ++i)
@@ -182,7 +184,7 @@ namespace MultiplayerARPG
                 yield return new WaitForSecondsRealtime(totalDuration - triggerDurations[i]);
             }
             animActionType = AnimActionType.None;
-            isAttackingOrUsingSkill = false;
+            IsAttackingOrUsingSkill = false;
         }
 
         /// <summary>
@@ -219,7 +221,7 @@ namespace MultiplayerARPG
                 return;
             
             // Start attack routine
-            isAttackingOrUsingSkill = true;
+            IsAttackingOrUsingSkill = true;
 
             // Play animations
             RequestPlayAttackAnimation(isLeftHand, (byte)animationIndex, aimPosition);
@@ -251,10 +253,10 @@ namespace MultiplayerARPG
             Dictionary<DamageElement, MinMaxFloat> damageAmounts = GetWeaponDamageAmounts(ref isLeftHand);
 
             // Set doing action state at clients and server
-            isAttackingOrUsingSkill = true;
+            IsAttackingOrUsingSkill = true;
 
             // Calculate move speed rate while doing action at clients and server
-            moveSpeedRateWhileAttackOrUseSkill = GetMoveSpeedRateWhileAttackOrUseSkill(animActionType, null);
+            MoveSpeedRateWhileAttackOrUseSkill = GetMoveSpeedRateWhileAttackOrUseSkill(animActionType, null);
 
             // Get play speed multiplier will use it to play animation faster or slower based on attack speed stats
             float playSpeedMultiplier = GetAnimSpeedRate(animActionType);
@@ -264,6 +266,8 @@ namespace MultiplayerARPG
             {
                 // Play animation
                 CharacterModel.PlayActionAnimation(animActionType, animationDataId, animationIndex, playSpeedMultiplier);
+                if (FpsModel != null)
+                    FpsModel.PlayActionAnimation(animActionType, animationDataId, animationIndex, playSpeedMultiplier);
             }
 
             float remainsDuration = totalDuration;
@@ -280,6 +284,8 @@ namespace MultiplayerARPG
                 {
                     // Play weapon launch special effects
                     CharacterModel.PlayWeaponLaunchEffect(animActionType);
+                    if (FpsModel != null)
+                        FpsModel.PlayWeaponLaunchEffect(animActionType);
                 }
 
                 // Call on attack to extend attack functionality while attacking
@@ -317,7 +323,7 @@ namespace MultiplayerARPG
 
             // Set doing action state to none at clients and server
             animActionType = AnimActionType.None;
-            isAttackingOrUsingSkill = false;
+            IsAttackingOrUsingSkill = false;
         }
 
         protected virtual void ApplyAttack(bool isLeftHand, CharacterItem weapon, DamageInfo damageInfo, Dictionary<DamageElement, MinMaxFloat> damageAmounts, Vector3 aimPosition)

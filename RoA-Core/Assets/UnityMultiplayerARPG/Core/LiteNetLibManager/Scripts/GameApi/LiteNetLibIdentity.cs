@@ -382,7 +382,7 @@ namespace LiteNetLibManager
             if (!hasSetupBehaviours)
             {
                 // Setup behaviours index, we will use this as reference for network functions
-                Behaviours = GetComponents<LiteNetLibBehaviour>();
+                Behaviours = GetComponentsInChildren<LiteNetLibBehaviour>();
                 for (loopCounter = 0; loopCounter < Behaviours.Length; ++loopCounter)
                 {
                     Behaviours[loopCounter].Setup(Convert.ToByte(loopCounter));
@@ -643,7 +643,7 @@ namespace LiteNetLibManager
             if (!IsServer)
                 return;
 
-            StartCoroutine(NetworkDestroyRoutine(0f));
+            Manager.StartCoroutine(NetworkDestroyRoutine(0f));
         }
 
         public void NetworkDestroy(float delay)
@@ -651,7 +651,7 @@ namespace LiteNetLibManager
             if (!IsServer)
                 return;
 
-            StartCoroutine(NetworkDestroyRoutine(delay));
+            Manager.StartCoroutine(NetworkDestroyRoutine(delay));
         }
 
         IEnumerator NetworkDestroyRoutine(float delay)

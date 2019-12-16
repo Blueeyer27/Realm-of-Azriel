@@ -15,7 +15,6 @@ namespace MultiplayerARPG
 
         public SkillAttackType skillAttackType;
         public AreaDamageEntity areaDamageEntity;
-        public GameEffectCollection hitEffects;
         public DamageIncremental damageAmount;
         public DamageEffectivenessAttribute[] effectivenessAttributes;
         public DamageInflictionIncremental[] weaponDamageInflictions;
@@ -90,16 +89,11 @@ namespace MultiplayerARPG
             return isDebuff;
         }
 
-        public sealed override Buff GetDebuff()
+        public override Buff GetDebuff()
         {
             if (!IsDebuff())
                 return default(Buff);
             return debuff;
-        }
-
-        public sealed override GameEffectCollection GetHitEffect()
-        {
-            return hitEffects;
         }
     }
 }

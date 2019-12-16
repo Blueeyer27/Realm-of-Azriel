@@ -46,9 +46,9 @@ namespace MultiplayerARPG
 
         protected void InterruptCastingSkill()
         {
-            if (isCastingSkillCanBeInterrupted && !isCastingSkillInterrupted)
+            if (IsCastingSkillCanBeInterrupted && !IsCastingSkillInterrupted)
             {
-                isCastingSkillInterrupted = true;
+                IsCastingSkillInterrupted = true;
                 RequestSkillCastingInterrupted();
             }
         }
@@ -102,7 +102,7 @@ namespace MultiplayerARPG
                 out totalDuration);
             
             // Start use skill routine
-            isAttackingOrUsingSkill = true;
+            IsAttackingOrUsingSkill = true;
 
             // Play animations
             RequestPlaySkillAnimation(isLeftHand, (byte)animationIndex, skill.DataId, skillLevel, aimPosition);
@@ -113,12 +113,14 @@ namespace MultiplayerARPG
         /// </summary>
         protected virtual void NetFuncSkillCastingInterrupted()
         {
-            isAttackingOrUsingSkill = false;
-            castingSkillDuration = castingSkillCountDown = 0;
-            if (CharacterModel != null)
+            IsAttackingOrUsingSkill = false;
+            CastingSkillDuration = CastingSkillCountDown = 0;
+            CharacterModel.StopActionAnimation();
+            CharacterModel.StopSkillCastAnimation();
+            if (FpsModel != null)
             {
-                CharacterModel.StopActionAnimation();
-                CharacterModel.StopSkillCastAnimation();
+                FpsModel.StopActionAnimation();
+                FpsModel.StopSkillCastAnimation();
             }
         }
 
@@ -156,38 +158,50 @@ namespace MultiplayerARPG
             Dictionary<DamageElement, MinMaxFloat> damageAmounts = skill.GetAttackDamages(this, skillLevel, isLeftHand);
 
             // Set doing action state at clients and server
-            isAttackingOrUsingSkill = true;
+            IsAttackingOrUsingSkill = true;
 
             // Calculate move speed rate while doing action at clients and server
-            moveSpeedRateWhileAttackOrUseSkill = GetMoveSpeedRateWhileAttackOrUseSkill(animActionType, skill);
+            MoveSpeedRateWhileAttackOrUseSkill = GetMoveSpeedRateWhileAttackOrUseSkill(animActionType, skill);
 
             // Get play speed multiplier will use it to play animation faster or slower based on attack speed stats
             float playSpeedMultiplier = GetAnimSpeedRate(animActionType);
             
             // Set doing action data
-            isCastingSkillCanBeInterrupted = skill.canBeInterruptedWhileCasting;
-            isCastingSkillInterrupted = false;
+            IsCastingSkillCanBeInterrupted = skill.canBeInterruptedWhileCasting;
+            IsCastingSkillInterrupted = false;
             // Get cast duration. Then if cast duration more than 0, it will play cast skill animation.
-            castingSkillDuration = castingSkillCountDown = skill.GetCastDuration(skillLevel);
-            if (castingSkillDuration > 0f)
+            CastingSkillDuration = CastingSkillCountDown = skill.GetCastDuration(skillLevel);
+            if (CastingSkillDuration > 0f)
             {
                 // Tell clients that character is casting
-                // Play special effect
                 if (IsClient)
-                    Model.InstantiateEffect(skill.castEffects.effects);
-                // Play casting animation
-                if (IsClient)
-                    CharacterModel.PlaySkillCastClip(skill.DataId, castingSkillDuration);
+                {
+                    // Play special effect
+                    CharacterModel.InstantiateEffect(skill.GetSkillCastEffect());
+                    // Play casting animation
+                    CharacterModel.PlaySkillCastClip(skill.DataId, CastingSkillDuration);
+                    if (FpsModel)
+                    {
+                        // Play special effect
+                        FpsModel.InstantiateEffect(skill.GetSkillCastEffect());
+                        // Play casting animation
+                        FpsModel.PlaySkillCastClip(skill.DataId, CastingSkillDuration);
+                    }
+                }
                 // Wait until end of cast duration
-                yield return new WaitForSeconds(castingSkillDuration);
+                yield return new WaitForSeconds(CastingSkillDuration);
             }
 
             // Continue skill activating action or not?
-            if (!isCastingSkillInterrupted || !isCastingSkillCanBeInterrupted)
+            if (!IsCastingSkillInterrupted || !IsCastingSkillCanBeInterrupted)
             {
                 // Animations will plays on clients only
                 if (IsClient)
+                {
                     CharacterModel.PlayActionAnimation(animActionType, animationDataId, animationIndex, playSpeedMultiplier);
+                    if (FpsModel)
+                        FpsModel.PlayActionAnimation(animActionType, animationDataId, animationIndex, playSpeedMultiplier);
+                }
 
                 float remainsDuration = totalDuration;
                 float tempTriggerDuration;
@@ -200,7 +214,11 @@ namespace MultiplayerARPG
 
                     // Special effects will plays on clients only
                     if (IsClient)
+                    {
                         CharacterModel.PlayWeaponLaunchEffect(animActionType);
+                        if (FpsModel != null)
+                            FpsModel.PlayWeaponLaunchEffect(animActionType);
+                    }
 
                     // Trigger skill event
                     if (onUseSkillRoutine != null)
@@ -219,7 +237,7 @@ namespace MultiplayerARPG
 
             // Set doing action state to none at clients and server
             animActionType = AnimActionType.None;
-            isAttackingOrUsingSkill = false;
+            IsAttackingOrUsingSkill = false;
         }
     }
 }

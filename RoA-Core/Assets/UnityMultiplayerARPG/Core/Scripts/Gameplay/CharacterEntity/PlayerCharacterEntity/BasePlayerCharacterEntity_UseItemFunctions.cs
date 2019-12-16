@@ -82,7 +82,7 @@ namespace MultiplayerARPG
         {
             if (!CanUseItem() || item == null || level <= 0 || !this.DecreaseItemsByIndex(itemIndex, 1))
                 return;
-            ApplyBuff(item.DataId, BuffType.PotionBuff, level);
+            ApplyBuff(item.DataId, BuffType.PotionBuff, level, this);
         }
 
         protected void UseItemPetSummon(short itemIndex, Item item, short level, int exp)
@@ -189,7 +189,7 @@ namespace MultiplayerARPG
                 out totalDuration);
 
             // Start use skill routine
-            isAttackingOrUsingSkill = true;
+            IsAttackingOrUsingSkill = true;
 
             // Play animations
             RequestPlaySkillAnimation(isLeftHand, (byte)animationIndex, skill.DataId, skillLevel, aimPosition);

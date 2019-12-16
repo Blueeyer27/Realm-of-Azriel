@@ -4,7 +4,8 @@
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
@@ -18,12 +19,14 @@ MonoBehaviour:
   category: 
   icon: {fileID: 0}
   scene:
-    sceneAsset: {fileID: 102900000, guid: 5ff0e5fbbdc3a214d87be31915d46cd5, type: 3}
-    sceneName: Map001
-  startPosition: {x: 0, y: 0, z: 10}
-  canPvp: 1
+    sceneAsset: {fileID: 102900000, guid: 9fe40be99bc48ae4895d313a7c1e2b59, type: 3}
+    sceneName: Valwyn001
+  startPosition: {x: 591.152, y: 5, z: 441.3373}
+  deadY: -6100
   canReturnToSavePoint: 0
+  pvpMode: 0
+  overrideRespawnPointMode: 0
+  canPvp: 1
   overrideRespawnPoint: 0
   overrideRespawnPointMap: {fileID: 0}
   overrideRespawnPointPosition: {x: 0, y: 0, z: 0}
-  deadY: -100

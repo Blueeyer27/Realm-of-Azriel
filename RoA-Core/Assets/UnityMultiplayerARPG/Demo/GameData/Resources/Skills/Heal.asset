@@ -21,10 +21,14 @@ MonoBehaviour:
   moveSpeedRateWhileUsingSkill: 0
   castEffects:
     effects: []
-  canBeInterruptedWhileCasting: 0
+  skillCastEffects: []
   castDuration:
     baseAmount: 0
     amountIncreaseEachLevel: 0
+  canBeInterruptedWhileCasting: 0
+  hitEffects:
+    effects: []
+  damageHitEffects: []
   availableWeapons: []
   consumeMp:
     baseAmount: 2
@@ -40,8 +44,6 @@ MonoBehaviour:
     skillLevels: []
   skillType: 0
   skillAttackType: 0
-  hitEffects:
-    effects: []
   damageInfo:
     damageType: 0
     hitOnlySelectedTarget: 0
